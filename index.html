@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="th">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown of Aetheria - Magical Star Reveal</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@400;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    .magic-container {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0520 50%, #000000 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* พื้นหลังเวทมนตร์ */
+    .magic-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .magic-circle-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    /* วงเวทย์ชั้นนอกสุด */
+    .outer-pentagram {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 35s linear infinite;
+    }
+
+    .outer-pentagram svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 20px rgba(147, 112, 219, 0.4));
+    }
+
+    /* วงเวทย์ดาวหกแฉก */
+    .hexagram-layer {
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 25s linear infinite reverse;
+    }
+
+    .hexagram-layer svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 15px rgba(218, 165, 32, 0.3));
+    }
+
+    /* วงเวทย์วงกลมซับซ้อน */
+    .complex-circle {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 20s linear infinite;
+    }
+
+    .complex-circle svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.3));
+    }
+
+
+
+    /* ดาวเล็กโคจร */
+    .orbiting-stars {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 15s linear infinite;
+    }
+
+    .mini-star {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: radial-gradient(circle, rgba(218, 165, 32, 1) 0%, transparent 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(218, 165, 32, 0.8);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .mini-star:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+    .mini-star:nth-child(2) { top: 25%; right: 0; animation-delay: 0.2s; }
+    .mini-star:nth-child(3) { bottom: 25%; right: 0; animation-delay: 0.4s; }
+    .mini-star:nth-child(4) { bottom: 0; left: 50%; transform: translateX(-50%); animation-delay: 0.6s; }
+    .mini-star:nth-child(5) { bottom: 25%; left: 0; animation-delay: 0.8s; }
+    .mini-star:nth-child(6) { top: 25%; left: 0; animation-delay: 1s; }
+
+    @keyframes pulse {
+      0%, 100% { 
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% { 
+        opacity: 1;
+        transform: scale(1.5);
+      }
+    }
+
+    /* วงเวทย์ภายใน */
+    .inner-magic-circle {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 18s linear infinite reverse;
+    }
+
+    .inner-magic-circle svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.5));
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ข้อความที่ซ่อน��ยู่ */
+    .title-wrapper {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .main-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 90px;
+      font-weight: 900;
+      letter-spacing: 12px;
+      background: linear-gradient(135deg, 
+        #2d1b4e 0%,
+        #4a2c6b 25%,
+        #daa520 50%,
+        #4a2c6b 75%,
+        #2d1b4e 100%
+      );
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(218, 165, 32, 0.3);
+      opacity: 0;
+      animation: fadeInText 2s ease-out 6s forwards, shimmer 4s ease-in-out 8s infinite;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    @keyframes fadeInText {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: blur(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0%, 100% {
+        background-position: 0% 50%;
+        text-shadow: 0 0 40px rgba(218, 165, 32, 0.3);
+      }
+      50% {
+        background-position: 100% 50%;
+        text-shadow: 0 0 60px rgba(147, 112, 219, 0.6),
+                     0 0 80px rgba(218, 165, 32, 0.4);
+      }
+    }
+
+    .subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 6px;
+      color: #9370db;
+      opacity: 0;
+      text-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
+      animation: fadeInSubtitle 2s ease-out 7s forwards;
+    }
+
+    @keyframes fadeInSubtitle {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 0.9;
+        transform: translateY(0);
+      }
+    }
+
+    /* ดาวสีดำทมิฬที่เลื่อน */
+    .dark-star {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      left: -250px;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: starSlide 6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      z-index: 10;
+      filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.8));
+    }
+
+    @keyframes starSlide {
+      0% {
+        left: -250px;
+        transform: translateY(-50%) rotate(0deg) scale(1);
+        filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.8));
+      }
+      45% {
+        left: 50%;
+        transform: translateY(-50%) translateX(-50%) rotate(180deg) scale(1.2);
+        filter: drop-shadow(0 0 60px rgba(75, 0, 130, 1)) 
+                drop-shadow(0 0 90px rgba(138, 43, 226, 0.8));
+      }
+      100% {
+        left: calc(100% + 250px);
+        transform: translateY(-50%) rotate(360deg) scale(0.8);
+        filter: drop-shadow(0 0 20px rgba(75, 0, 130, 0.4));
+      }
+    }
+
+    /* แสงสว่างที่ดาวฉายผ่าน */
+    .light-reveal {
+      position: absolute;
+      width: 300px;
+      height: 100%;
+      background: radial-gradient(ellipse at center,
+        rgba(218, 165, 32, 0.4) 0%,
+        rgba(147, 112, 219, 0.3) 30%,
+        transparent 70%
+      );
+      left: -300px;
+      top: 0;
+      animation: lightSweep 6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      z-index: 5;
+      filter: blur(20px);
+      mix-blend-mode: screen;
+    }
+
+    @keyframes lightSweep {
+      0% {
+        left: -300px;
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        left: calc(100% + 300px);
+        opacity: 0;
+      }
+    }
+
+    /* แสงเปิดเผยข้อความ */
+    .text-reveal-light {
+      position: absolute;
+      width: 100%;
+      height: 200px;
+      background: radial-gradient(ellipse at center,
+        rgba(218, 165, 32, 0.6) 0%,
+        rgba(147, 112, 219, 0.4) 40%,
+        transparent 70%
+      );
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      animation: revealExpand 2s ease-out 6s forwards;
+      z-index: 1;
+      filter: blur(30px);
+      mix-blend-mode: screen;
+    }
+
+    @keyframes revealExpand {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+      }
+    }
+
+    /* อนุภาคเวทมนตร์ลอย */
+    .floating-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, #daa520 0%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatUp 4s ease-in infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(0) translateX(0) scale(0);
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-200px) translateX(var(--drift)) scale(1.5);
+      }
+    }
+
+    /* ปุ่มเข้าร่วม */
+    .restart-button {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 40px;
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: #daa520;
+      background: rgba(45, 27, 78, 0.6);
+      border: 2px solid #daa520;
+      border-radius: 50px;
+      cursor: pointer;
+      opacity: 0;
+      z-index: 20;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(218, 165, 32, 0.3),
+                  inset 0 0 20px rgba(147, 112, 219, 0.2);
+      animation: buttonFadeIn 1s ease-out 8s forwards;
+    }
+
+    @keyframes buttonFadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .restart-button:hover {
+      background: rgba(45, 27, 78, 0.9);
+      box-shadow: 0 0 40px rgba(218, 165, 32, 0.6),
+                  inset 0 0 30px rgba(147, 112, 219, 0.4);
+      transform: translateX(-50%) scale(1.05);
+      color: #fff;
+    }
+
+    .restart-button:active {
+      transform: translateX(-50%) scale(0.98);
+    }
+
+    /* กล่องแสดงลิงก์ */
+    .link-display {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(45, 27, 78, 0.95);
+      border: 2px solid #daa520;
+      border-radius: 20px;
+      padding: 20px 30px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(218, 165, 32, 0.4),
+                  inset 0 0 20px rgba(147, 112, 219, 0.2);
+      z-index: 20;
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .link-display.show {
+      display: flex;
+      animation: fadeInScale 0.3s ease-out;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    .link-text {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      color: #9370db;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .link-url {
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      color: #daa520;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(218, 165, 32, 0.3);
+      user-select: all;
+      cursor: text;
+      text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+    }
+
+    .copy-button {
+      padding: 10px 30px;
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #daa520;
+      background: rgba(45, 27, 78, 0.8);
+      border: 2px solid #daa520;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .copy-button:hover {
+      background: rgba(45, 27, 78, 1);
+      box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
+      transform: scale(1.05);
+      color: #fff;
+    }
+
+    .copy-button.copied {
+      background: rgba(34, 139, 34, 0.8);
+      border-color: #90ee90;
+      color: #90ee90;
+    }
+
+    /* เอฟเฟกต์ดาว SVG */
+    .star-glow {
+      animation: starPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes starPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(75, 0, 130, 0.8));
+      }
+      50% {
+        filter: drop-shadow(0 0 30px rgba(138, 43, 226, 1))
+                drop-shadow(0 0 50px rgba(75, 0, 130, 0.6));
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="magic-container"><!-- วงกลมเวทมนตร์พื้นหลัง -->
+   <div class="magic-particles"><!-- วงเวทย์ดาวห้าแฉกนอกสุด -->
+    <div class="outer-pentagram">
+     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,20 115,75 170,75 125,110 140,165 100,130 60,165 75,110 30,75 85,75" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2" /> <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(147, 112, 219, 0.3)" stroke-width="1" /> <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(147, 112, 219, 0.2)" stroke-width="1" stroke-dasharray="5,5" />
+     </svg>
+    </div><!-- วงเวทย์ดาวหกแฉก -->
+    <div class="hexagram-layer">
+     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,30 130,80 180,90 130,110 140,160 100,130 60,160 70,110 20,90 70,80" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2" /> <polygon points="100,170 130,120 180,110 130,90 140,40 100,70 60,40 70,90 20,110 70,120" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2" /> <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(218, 165, 32, 0.3)" stroke-width="1.5" />
+     </svg>
+    </div><!-- วงเวทย์ซับซ้อน -->
+    <div class="complex-circle">
+     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="none" stroke="rgba(138, 43, 226, 0.4)" stroke-width="2" /> <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1" stroke-dasharray="10,5" /> <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1" /> <line x1="100" y1="10" x2="100" y2="190" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" /> <line x1="10" y1="100" x2="190" y2="100" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" /> <line x1="30" y1="30" x2="170" y2="170" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" /> <line x1="170" y1="30" x2="30" y2="170" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" />
+     </svg>
+    </div><!-- ดาวเล็กโคจร -->
+    <div class="orbiting-stars">
+     <div class="mini-star"></div>
+     <div class="mini-star"></div>
+     <div class="mini-star"></div>
+     <div class="mini-star"></div>
+     <div class="mini-star"></div>
+     <div class="mini-star"></div>
+    </div><!-- วงเวทย์ภายใน -->
+    <div class="inner-magic-circle">
+     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="none" stroke="rgba(138, 43, 226, 0.5)" stroke-width="3" /> <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2" /> <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="2" /> <polygon points="100,50 120,90 160,90 130,115 140,155 100,130 60,155 70,115 40,90 80,90" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2" />
+     </svg>
+    </div>
+   </div><!-- ดาวสีดำทมิฬ -->
+   <div class="dark-star">
+    <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs>
+      <radialgradient id="starGradient">
+       <stop offset="0%" style="stop-color:#4B0082;stop-opacity:1" />
+       <stop offset="50%" style="stop-color:#2d1654;stop-opacity:1" />
+       <stop offset="100%" style="stop-color:#1a0a33;stop-opacity:1" />
+      </radialgradient>
+      <filter id="starGlow">
+       <fegaussianblur stddeviation="3" result="coloredBlur" />
+       <femerge>
+        <femergenode in="coloredBlur" />
+        <femergenode in="SourceGraphic" />
+       </femerge>
+      </filter>
+     </defs> <!-- ดาว 8 แฉก --> <g class="star-glow" filter="url(#starGlow)">
+      <path d="M 100 20 L 110 80 L 170 70 L 120 100 L 150 150 L 100 120 L 50 150 L 80 100 L 30 70 L 90 80 Z" fill="url(#starGradient)" stroke="#8a2be2" stroke-width="2" />
+      <circle cx="100" cy="100" r="25" fill="#2d1654" stroke="#4B0082" stroke-width="2" /> <!-- รายละเอียดเพิ่มเติม -->
+      <circle cx="100" cy="100" r="15" fill="none" stroke="#8a2be2" stroke-width="1" opacity="0.6" />
+      <circle cx="100" cy="100" r="8" fill="#4B0082" opacity="0.8" />
+     </g>
+    </svg>
+   </div><!-- ���สงสว่างที่ดาวฉาย -->
+   <div class="light-reveal"></div><!-- แสงเปิดเ��ยข้อความ -->
+   <div class="text-reveal-light"></div><!-- ข้อความ -->
+   <div class="title-wrapper">
+    <h1 class="main-title" id="mainTitle">CROWN OF AETHERIA</h1>
+    <p class="subtitle" id="subtitle">Ancient Magic Unveiled</p>
+   </div><!-- อนุภาคเวทมนตร์ -->
+   <div id="particlesContainer"></div><!-- ปุ่มเข้าร่วม --> <button class="restart-button" id="joinBtn">เข้าร่วม</button> <!-- กล่องแสดงลิงก์ -->
+   <div class="link-display" id="linkDisplay">
+    <div class="link-text">
+     ลิงก์ Discord
+    </div>
+    <div class="link-url" id="discordLink">
+     https://discord.gg/TSVtmWSrX
+    </div><button class="copy-button" id="copyBtn">คัดลอกลิงก์</button>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      title_text: "CROWN OF AETHERIA",
+      subtitle_text: "",
+      background_color: "#1a0a2e",
+      star_color: "#4B0082",
+      text_color: "#daa520"
+    };
+
+    let config = { ...defaultConfig };
+
+    // สร��างอนุภา��เวทมนตร์
+    function createMagicParticles() {
+      const container = document.getElementById('particlesContainer');
+      container.innerHTML = '';
+      
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'floating-particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 4 + 's';
+        particle.style.setProperty('--drift', (Math.random() - 0.5) * 100 + 'px');
+        container.appendChild(particle);
+      }
+    }
+
+    // เมื่อกดปุ่มเข้าร่วม แสดงลิงก์
+    const joinButton = document.getElementById('joinBtn');
+    const linkDisplay = document.getElementById('linkDisplay');
+    const copyBtn = document.getElementById('copyBtn');
+    const discordLink = document.getElementById('discordLink');
+
+    if (joinButton && linkDisplay) {
+      joinButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        joinButton.style.display = 'none';
+        linkDisplay.classList.add('show');
+      });
+    }
+
+    // ฟังก์ชันคัดลอกลิงก์
+    if (copyBtn && discordLink) {
+      copyBtn.addEventListener('click', function() {
+        const linkText = discordLink.textContent;
+        
+        // คัดลอกลิงก์
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(linkText).then(() => {
+            copyBtn.textContent = 'คัดลอกแล้ว!';
+            copyBtn.classList.add('copied');
+            
+            setTimeout(() => {
+              copyBtn.textContent = 'คัดลอกลิงก์';
+              copyBtn.classList.remove('copied');
+            }, 2000);
+          }).catch(() => {
+            fallbackCopy(linkText);
+          });
+        } else {
+          fallbackCopy(linkText);
+        }
+      });
+    }
+
+    // วิธีสำรองในการคัดลอก
+    function fallbackCopy(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        copyBtn.textContent = 'ว!';
+        copyBtn.classList.add('copied');
+        
+        setTimeout(() => {
+          copyBtn.textContent = 'คัดลอกลิงก์';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        copyBtn.textContent = 'เลือกลิงก์เพื่อคัดลอก';
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    async function onConfigChange(newConfig) {
+      const container = document.querySelector('.magic-container');
+      const bgColor = newConfig.background_color || defaultConfig.background_color;
+      container.style.background = `radial-gradient(ellipse at center, ${bgColor} 0%, #0d0520 50%, #000000 100%)`;
+
+      const titleText = newConfig.title_text || defaultConfig.title_text;
+      const subtitleText = newConfig.subtitle_text || defaultConfig.subtitle_text;
+      
+      document.getElementById('mainTitle').textContent = titleText;
+      document.getElementById('subtitle').textContent = subtitleText;
+
+      const starColor = newConfig.star_color || defaultConfig.star_color;
+      const starGradient = document.getElementById('starGradient');
+      if (starGradient) {
+        starGradient.innerHTML = `
+          <stop offset="0%" style="stop-color:${starColor};stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#2d1654;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1a0a33;stop-opacity:1" />
+        `;
+      }
+
+      const textColor = newConfig.text_color || defaultConfig.text_color;
+      const button = document.querySelector('.restart-button');
+      if (button) {
+        button.style.color = textColor;
+        button.style.borderColor = textColor;
+      }
+    }
+
+    const elementApi = {
+      defaultConfig,
+      onConfigChange,
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.star_color || defaultConfig.star_color,
+            set: (value) => {
+              config.star_color = value;
+              window.elementSdk.setConfig({ star_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ["title_text", config.title_text || defaultConfig.title_text],
+        ["subtitle_text", config.subtitle_text || defaultConfig.subtitle_text]
+      ])
+    };
+
+    if (window.elementSdk) {
+      window.elementSdk.init(elementApi);
+      config = window.elementSdk.config;
+    }
+
+    // เริ่มต้น
+    createMagicParticles();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9aefb29703ab447c',t:'MTc2NTkwNDAxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
