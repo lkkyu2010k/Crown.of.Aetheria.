@@ -109,8 +109,8 @@
         }
 
         .outer-universe {
-            width: 900px;
-            height: 900px;
+            width: min(90vmin, 900px);
+            height: min(90vmin, 900px);
             animation: rotateUniverse 60s linear infinite;
         }
 
@@ -126,8 +126,8 @@
         }
 
         .pentagram-grand {
-            width: 750px;
-            height: 750px;
+            width: min(75vmin, 750px);
+            height: min(75vmin, 750px);
             animation: rotatePentagram 40s linear infinite reverse;
         }
 
@@ -143,8 +143,8 @@
         }
 
         .hexagram-divine {
-            width: 600px;
-            height: 600px;
+            width: min(60vmin, 600px);
+            height: min(60vmin, 600px);
             animation: rotateHexagram 30s linear infinite;
         }
 
@@ -160,8 +160,8 @@
         }
 
         .sacred-geometry {
-            width: 450px;
-            height: 450px;
+            width: min(45vmin, 450px);
+            height: min(45vmin, 450px);
             animation: rotateSacred 25s linear infinite reverse;
         }
 
@@ -177,8 +177,8 @@
         }
 
         .inner-sanctum {
-            width: 320px;
-            height: 320px;
+            width: min(32vmin, 320px);
+            height: min(32vmin, 320px);
             animation: rotateInner 20s linear infinite;
         }
 
@@ -196,8 +196,8 @@
         /* Cosmic Orbiting Stars */
         .cosmic-orbit {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: min(50vmin, 500px);
+            height: min(50vmin, 500px);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -249,9 +249,9 @@
         /* Ultimate Dark Star - หมุนลื่นไหลแบบง่ายๆ */
         .dark-star-ultimate {
             position: absolute;
-            width: 280px;
-            height: 280px;
-            left: -350px;
+            width: min(28vmin, 280px);
+            height: min(28vmin, 280px);
+            left: -35vmin;
             top: 50%;
             transform: translateY(-50%);
             animation: starGrandEntry 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -262,7 +262,7 @@
 
         @keyframes starGrandEntry {
             0% {
-                left: -350px;
+                left: -35vmin;
                 transform: translateY(-50%) rotate(0deg) scale(0.9);
                 filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.8));
             }
@@ -280,7 +280,7 @@
                         drop-shadow(0 0 200px rgba(255, 215, 0, 0.8));
             }
             100% {
-                left: calc(100% + 350px);
+                left: calc(100% + 35vmin);
                 transform: translateY(-50%) rotate(360deg) scale(0.8);
                 filter: drop-shadow(0 0 20px rgba(75, 0, 130, 0.4));
             }
@@ -289,9 +289,9 @@
         /* เพิ่มวงแสงรอบดาวตอนอยู่กลางจอ */
         .star-energy-ring {
             position: absolute;
-            width: 280px;
-            height: 280px;
-            left: -350px;
+            width: min(28vmin, 280px);
+            height: min(28vmin, 280px);
+            left: -35vmin;
             top: 50%;
             transform: translateY(-50%);
             animation: energyRingPulse 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -327,7 +327,7 @@
         /* Divine Light Sweep */
         .divine-light {
             position: absolute;
-            width: 400px;
+            width: min(40vmin, 400px);
             height: 100%;
             background: radial-gradient(ellipse at center,
                 rgba(218, 165, 32, 0.6) 0%,
@@ -335,7 +335,7 @@
                 rgba(147, 112, 219, 0.4) 40%,
                 transparent 70%
             );
-            left: -400px;
+            left: -40vmin;
             top: 0;
             animation: divineSweep 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             z-index: 15;
@@ -345,7 +345,7 @@
 
         @keyframes divineSweep {
             0% {
-                left: -400px;
+                left: -40vmin;
                 opacity: 0;
             }
             20% {
@@ -355,7 +355,7 @@
                 opacity: 1;
             }
             100% {
-                left: calc(100% + 400px);
+                left: calc(100% + 40vmin);
                 opacity: 0;
             }
         }
@@ -405,9 +405,9 @@
 
         .main-title {
             font-family: 'Cinzel Decorative', serif;
-            font-size: 110px;
+            font-size: clamp(2rem, 8vmin, 110px);
             font-weight: 900;
-            letter-spacing: 18px;
+            letter-spacing: clamp(0.3rem, 1.5vmin, 18px);
             background: linear-gradient(135deg, 
                 #daa520 0%,
                 #ffd700 25%,
@@ -426,7 +426,8 @@
             filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9))
                     drop-shadow(0 0 40px rgba(218, 165, 32, 0.8))
                     drop-shadow(0 5px 15px rgba(218, 165, 32, 0.6));
-            margin-bottom: 30px;
+            margin-bottom: clamp(1rem, 3vmin, 30px);
+            padding: 0 2vmin;
         }
 
         @keyframes titleGrandReveal {
@@ -466,9 +467,9 @@
 
         .subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 32px;
+            font-size: clamp(1rem, 3vmin, 32px);
             font-weight: 600;
-            letter-spacing: 8px;
+            letter-spacing: clamp(0.2rem, 0.8vmin, 8px);
             color: #e6d5f0;
             opacity: 0;
             text-shadow: 0 0 30px rgba(218, 165, 32, 0.9),
@@ -476,6 +477,7 @@
                         0 2px 10px rgba(0, 0, 0, 0.8);
             animation: subtitleReveal 2.5s ease-out 7.5s forwards;
             font-style: italic;
+            padding: 0 2vmin;
         }
 
         @keyframes subtitleReveal {
@@ -503,41 +505,22 @@
             pointer-events: none;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
         }
-
-        @keyframes floatPremium {
-            0% {
-                opacity: 0;
-                transform: translateY(0) translateX(0) scale(0) rotate(0deg);
-            }
-            15% {
-                opacity: 1;
-            }
-            85% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-250px) translateX(var(--drift)) scale(2) rotate(360deg);
-            }
-        }
-
-        /* Ultra Premium Button */
         .premium-button {
-            position: absolute;
-            bottom: 60px;
+            position: fixed;
+            bottom: clamp(2rem, 6vmin, 60px);
             left: 50%;
             transform: translateX(-50%);
-            padding: 20px 60px;
+            padding: clamp(0.8rem, 2vmin, 20px) clamp(2rem, 6vmin, 60px);
             font-family: 'Cinzel', serif;
-            font-size: 20px;
+            font-size: clamp(0.9rem, 2vmin, 20px);
             font-weight: 700;
-            letter-spacing: 4px;
+            letter-spacing: clamp(0.1rem, 0.4vmin, 4px);
             color: #ffd700;
             background: linear-gradient(135deg, 
                 rgba(45, 27, 78, 0.9) 0%,
                 rgba(75, 0, 130, 0.9) 50%,
                 rgba(45, 27, 78, 0.9) 100%);
-            border: 3px solid #daa520;
+            border: clamp(2px, 0.3vmin, 3px) solid #daa520;
             border-radius: 60px;
             cursor: pointer;
             opacity: 0;
@@ -548,7 +531,6 @@
                         0 0 60px rgba(147, 112, 219, 0.3),
                         inset 0 0 30px rgba(147, 112, 219, 0.3);
             animation: buttonGrandReveal 1.5s ease-out 9s forwards;
-            position: fixed;
             overflow: hidden;
         }
 
@@ -596,15 +578,15 @@
         /* Premium Link Display */
         .link-container {
             position: fixed;
-            bottom: 60px;
+            bottom: clamp(2rem, 6vmin, 60px);
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, 
                 rgba(45, 27, 78, 0.95) 0%,
                 rgba(75, 0, 130, 0.95) 100%);
-            border: 3px solid #daa520;
-            border-radius: 30px;
-            padding: 35px 50px;
+            border: clamp(2px, 0.3vmin, 3px) solid #daa520;
+            border-radius: clamp(1rem, 3vmin, 30px);
+            padding: clamp(1.5rem, 3.5vmin, 35px) clamp(2rem, 5vmin, 50px);
             backdrop-filter: blur(20px);
             box-shadow: 0 0 50px rgba(218, 165, 32, 0.6),
                         0 0 100px rgba(147, 112, 219, 0.4),
@@ -612,9 +594,10 @@
             z-index: 30;
             display: none;
             flex-direction: column;
-            gap: 20px;
+            gap: clamp(0.8rem, 2vmin, 20px);
             align-items: center;
-            min-width: 500px;
+            min-width: min(90vw, 500px);
+            max-width: 90vw;
         }
 
         .link-container.show {
@@ -635,27 +618,28 @@
 
         .link-label {
             font-family: 'Cinzel', serif;
-            font-size: 20px;
+            font-size: clamp(0.9rem, 2vmin, 20px);
             color: #c9a0dc;
-            letter-spacing: 3px;
+            letter-spacing: clamp(0.1rem, 0.3vmin, 3px);
             text-shadow: 0 0 20px rgba(147, 112, 219, 0.6);
             font-weight: 600;
         }
 
         .link-text {
             font-family: 'Courier New', monospace;
-            font-size: 20px;
+            font-size: clamp(0.8rem, 2vmin, 20px);
             color: #ffd700;
             background: rgba(0, 0, 0, 0.5);
-            padding: 18px 35px;
-            border-radius: 15px;
+            padding: clamp(0.8rem, 1.8vmin, 18px) clamp(1.5rem, 3.5vmin, 35px);
+            border-radius: clamp(0.6rem, 1.5vmin, 15px);
             border: 2px solid rgba(218, 165, 32, 0.5);
             user-select: all;
             cursor: text;
             text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
             transition: all 0.3s;
-            min-width: 400px;
+            width: 100%;
             text-align: center;
+            word-break: break-all;
         }
 
         .link-text:hover {
@@ -665,11 +649,11 @@
         }
 
         .copy-btn {
-            padding: 14px 45px;
+            padding: clamp(0.6rem, 1.4vmin, 14px) clamp(2rem, 4.5vmin, 45px);
             font-family: 'Cinzel', serif;
-            font-size: 16px;
+            font-size: clamp(0.75rem, 1.6vmin, 16px);
             font-weight: 700;
-            letter-spacing: 3px;
+            letter-spacing: clamp(0.1rem, 0.3vmin, 3px);
             color: #ffd700;
             background: linear-gradient(135deg, 
                 rgba(75, 0, 130, 0.9) 0%,
@@ -691,31 +675,21 @@
             color: #fff;
         }
 
-        .copy-btn.copied {
-            background: linear-gradient(135deg, 
-                rgba(34, 139, 34, 0.9) 0%,
-                rgba(50, 205, 50, 0.9) 100%);
-            border-color: #90ee90;
-            color: #90ee90;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-title { font-size: 80px; letter-spacing: 12px; }
-            .subtitle { font-size: 24px; }
-            .outer-universe { width: 700px; height: 700px; }
-            .pentagram-grand { width: 600px; height: 600px; }
-            .hexagram-divine { width: 500px; height: 500px; }
-            .sacred-geometry { width: 400px; height: 400px; }
-        }
-
-        @media (max-width: 768px) {
-            .main-title { font-size: 50px; letter-spacing: 8px; }
-            .subtitle { font-size: 18px; letter-spacing: 4px; }
-            .premium-button { font-size: 16px; padding: 16px 40px; }
-            .link-container { min-width: 90%; padding: 25px 30px; }
-            .link-text { min-width: 100%; font-size: 16px; }
-            .dark-star-ultimate { width: 200px; height: 200px; }
+        @keyframes floatPremium {
+            0% {
+                opacity: 0;
+                transform: translateY(0) translateX(0) scale(0) rotate(0deg);
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-250px) translateX(var(--drift)) scale(2) rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -883,6 +857,156 @@
     </div>
 
     <script>
+        // สร้าง Audio Context
+        let audioContext;
+        let isSoundEnabled = true;
+
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                console.log('Web Audio API not supported');
+                isSoundEnabled = false;
+            }
+        }
+
+        // ฟังก์ชันสร้างเสียง
+        function playTone(frequency, duration, type = 'sine', volume = 0.3) {
+            if (!isSoundEnabled || !audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // เสียงพื้นฐานเวทมนตร์
+        function playMagicAmbient() {
+            if (!isSoundEnabled || !audioContext) return;
+
+            // เสียงพื้นฐานต่ำ (drone)
+            const drone = audioContext.createOscillator();
+            const droneGain = audioContext.createGain();
+            
+            drone.connect(droneGain);
+            droneGain.connect(audioContext.destination);
+            
+            drone.frequency.value = 110; // A2
+            drone.type = 'sine';
+            
+            droneGain.gain.setValueAtTime(0, audioContext.currentTime);
+            droneGain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 2);
+            droneGain.gain.setValueAtTime(0.15, audioContext.currentTime + 8);
+            droneGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 10);
+            
+            drone.start(audioContext.currentTime);
+            drone.stop(audioContext.currentTime + 10);
+        }
+
+        // เสียงดาวปรากฏ
+        function playStarAppearance() {
+            if (!isSoundEnabled || !audioContext) return;
+
+            // เสียงกระดิ่งเวทมนตร์
+            setTimeout(() => playTone(523.25, 1.5, 'sine', 0.25), 0);      // C5
+            setTimeout(() => playTone(659.25, 1.5, 'sine', 0.2), 200);     // E5
+            setTimeout(() => playTone(783.99, 1.5, 'sine', 0.2), 400);     // G5
+            
+            // เสียงประกายไฟ
+            setTimeout(() => {
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        playTone(1500 + Math.random() * 1000, 0.2, 'triangle', 0.15);
+                    }, i * 100);
+                }
+            }, 600);
+        }
+
+        // เสียงดาวอยู่ตรงกลาง (พัลส์แสง)
+        function playStarPulse() {
+            if (!isSoundEnabled || !audioContext) return;
+
+            // เสียงพัลส์ใหญ่
+            playTone(261.63, 2, 'sine', 0.3);      // C4
+            setTimeout(() => playTone(392, 2, 'sine', 0.25), 100);   // G4
+            setTimeout(() => playTone(523.25, 2, 'sine', 0.2), 200); // C5
+            
+            // เสียงระฆังวิเศษ
+            setTimeout(() => {
+                playTone(1046.5, 1.5, 'triangle', 0.2);  // C6
+                playTone(1318.51, 1.5, 'triangle', 0.15); // E6
+            }, 300);
+        }
+
+        // เสียงดาวออกไป
+        function playStarExit() {
+            if (!isSoundEnabled || !audioContext) return;
+
+            // เสียงลดหลั่น
+            setTimeout(() => playTone(783.99, 1, 'sine', 0.2), 0);    // G5
+            setTimeout(() => playTone(659.25, 1, 'sine', 0.18), 150); // E5
+            setTimeout(() => playTone(523.25, 1, 'sine', 0.15), 300); // C5
+            setTimeout(() => playTone(392, 1.2, 'sine', 0.12), 450);  // G4
+        }
+
+        // เสียงข้อความปรากฏ
+        function playTextReveal() {
+            if (!isSoundEnabled || !audioContext) return;
+
+            // เสียงระฆังใส
+            playTone(1046.5, 1.5, 'sine', 0.25);  // C6
+            setTimeout(() => playTone(1318.51, 1.5, 'sine', 0.2), 100);  // E6
+            setTimeout(() => playTone(1567.98, 1.5, 'sine', 0.18), 200); // G6
+            
+            // ประกายเงา
+            setTimeout(() => {
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        playTone(2000 + Math.random() * 500, 0.15, 'sine', 0.1);
+                    }, i * 80);
+                }
+            }, 300);
+        }
+
+        // เสียงคลิกปุ่ม
+        function playButtonClick() {
+            if (!isSoundEnabled || !audioContext) return;
+            playTone(880, 0.1, 'sine', 0.3);
+            setTimeout(() => playTone(1046.5, 0.15, 'sine', 0.2), 50);
+        }
+
+        // เริ่มต้นเสียง
+        function startSoundSequence() {
+            initAudio();
+            if (!isSoundEnabled) return;
+
+            // เสียงพื้นหลัง
+            setTimeout(() => playMagicAmbient(), 0);
+            
+            // เสียงดาวปรากฏ (ตามเวลาแอนิเมชัน)
+            setTimeout(() => playStarAppearance(), 500);
+            
+            // เสียงดาวถึงกลาง (45% ของ 7000ms = 3150ms)
+            setTimeout(() => playStarPulse(), 3150);
+            
+            // เสียงดาวออกไป (55% ของ 7000ms = 3850ms)
+            setTimeout(() => playStarExit(), 3850);
+            
+            // เสียงข้อความปรากฏ (6500ms)
+            setTimeout(() => playTextReveal(), 6500);
+        }
+
         // Create 3D Stars
         function create3DStars() {
             const container = document.getElementById('starsContainer');
@@ -923,12 +1047,15 @@
         const discordLink = document.getElementById('discordLink');
 
         joinBtn.addEventListener('click', () => {
+            playButtonClick();
             joinBtn.style.display = 'none';
             linkContainer.classList.add('show');
         });
 
         copyBtn.addEventListener('click', () => {
             const linkText = discordLink.textContent;
+            
+            playButtonClick();
             
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(linkText).then(() => {
@@ -974,6 +1101,15 @@
         // Initialize
         create3DStars();
         createPremiumParticles();
+        
+        // เริ่มเสียงเมื่อโหลดหน้าเสร็จ
+        window.addEventListener('load', () => {
+            // รอให้ user interact ก่อน (browser policy)
+            document.addEventListener('click', function initSound() {
+                startSoundSequence();
+                document.removeEventListener('click', initSound);
+            }, { once: true });
+        });
     </script>
 </body>
 </html>
