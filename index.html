@@ -13,7 +13,6 @@
         }
 
         :root {
-            /* Default values - จะถูก override ด้วย JavaScript */
             --scale-factor: 1;
             --circle-outer: 900px;
             --circle-penta: 750px;
@@ -30,6 +29,8 @@
             --button-padding-h: 60px;
             --button-font: 20px;
             --button-bottom: 60px;
+            --cursor-x: 50%;
+            --cursor-y: 50%;
         }
 
         body, html {
@@ -37,15 +38,41 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Cinzel', serif;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(218, 165, 32, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            mix-blend-mode: screen;
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.6),
+                        inset 0 0 10px rgba(218, 165, 32, 0.4);
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(218, 165, 32, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .magic-container {
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, 
-                #0a0015 0%, 
-                #1a0a2e 30%, 
-                #0d0520 60%, 
+            background: radial-gradient(ellipse at var(--cursor-x) var(--cursor-y), 
+                #1a0a2e 0%, 
+                #0a0015 40%, 
                 #000000 100%);
             display: flex;
             flex-direction: column;
@@ -53,6 +80,7 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+            transition: background 0.3s ease-out;
         }
 
         /* Enhanced 3D Stars Background */
@@ -86,17 +114,20 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Nebula Background */
+        /* Nebula Background - ตอบสนองกับ cursor */
         .nebula-bg {
             position: absolute;
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(ellipse at 20% 30%, rgba(147, 112, 219, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(218, 165, 32, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at calc(var(--cursor-x) - 30%) calc(var(--cursor-y) - 20%), 
+                    rgba(147, 112, 219, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at calc(var(--cursor-x) + 30%) calc(var(--cursor-y) + 20%), 
+                    rgba(218, 165, 32, 0.12) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 60%);
             animation: nebulaShift 20s ease-in-out infinite;
             filter: blur(60px);
+            transition: background 0.5s ease-out;
         }
 
         @keyframes nebulaShift {
@@ -104,7 +135,7 @@
             50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
         }
 
-        /* Ultra Premium Magic Circles */
+        /* ✨ แก้ไขวงเวทมนตร์ให้ไม่เบี้ยว - แยก centering และ rotation */
         .magic-circle-system {
             position: absolute;
             width: 100%;
@@ -113,26 +144,32 @@
         }
 
         @keyframes circleFadeOut {
-            0% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0.2;
-            }
+            0% { opacity: 1; }
+            100% { opacity: 0.2; }
         }
 
-        .circle-layer {
+        /* Container สำหรับ centering */
+        .circle-center {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
+        /* Layer สำหรับ rotation - ไม่ต้อง translate อีก */
+        .circle-rotator {
+            width: 100%;
+            height: 100%;
+            will-change: transform;
+        }
+
         .outer-universe {
             width: var(--circle-outer);
             height: var(--circle-outer);
-            animation: rotateUniverse 60s linear infinite;
-            will-change: transform;
+        }
+
+        .outer-universe .circle-rotator {
+            animation: rotateClockwise 60s linear infinite;
         }
 
         .outer-universe svg {
@@ -141,16 +178,23 @@
             filter: drop-shadow(0 0 30px rgba(147, 112, 219, 0.6));
         }
 
-        @keyframes rotateUniverse {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateCounter {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
         }
 
         .pentagram-grand {
             width: var(--circle-penta);
             height: var(--circle-penta);
-            animation: rotatePentagram 40s linear infinite reverse;
-            will-change: transform;
+        }
+
+        .pentagram-grand .circle-rotator {
+            animation: rotateCounter 40s linear infinite;
         }
 
         .pentagram-grand svg {
@@ -159,16 +203,13 @@
             filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.5));
         }
 
-        @keyframes rotatePentagram {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
         .hexagram-divine {
             width: var(--circle-hexa);
             height: var(--circle-hexa);
-            animation: rotateHexagram 30s linear infinite;
-            will-change: transform;
+        }
+
+        .hexagram-divine .circle-rotator {
+            animation: rotateClockwise 30s linear infinite;
         }
 
         .hexagram-divine svg {
@@ -177,16 +218,13 @@
             filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.5));
         }
 
-        @keyframes rotateHexagram {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
         .sacred-geometry {
             width: var(--circle-sacred);
             height: var(--circle-sacred);
-            animation: rotateSacred 25s linear infinite reverse;
-            will-change: transform;
+        }
+
+        .sacred-geometry .circle-rotator {
+            animation: rotateCounter 25s linear infinite;
         }
 
         .sacred-geometry svg {
@@ -195,16 +233,13 @@
             filter: drop-shadow(0 0 15px rgba(147, 112, 219, 0.4));
         }
 
-        @keyframes rotateSacred {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
         .inner-sanctum {
             width: var(--circle-inner);
             height: var(--circle-inner);
-            animation: rotateInner 20s linear infinite;
-            will-change: transform;
+        }
+
+        .inner-sanctum .circle-rotator {
+            animation: rotateClockwise 20s linear infinite;
         }
 
         .inner-sanctum svg {
@@ -213,16 +248,11 @@
             filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.6));
         }
 
-        @keyframes rotateInner {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
         /* Cosmic Orbiting Stars */
         .cosmic-orbit {
             position: absolute;
-            width: min(50vmin, 500px);
-            height: min(50vmin, 500px);
+            width: clamp(250px, 50vmin, 500px);
+            height: clamp(250px, 50vmin, 500px);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -230,12 +260,8 @@
         }
 
         @keyframes orbitFadeOut {
-            0% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0.3;
-            }
+            0% { opacity: 1; }
+            100% { opacity: 0.3; }
         }
 
         @keyframes orbitSpin {
@@ -271,7 +297,7 @@
         .orbit-star:nth-child(9) { top: 35%; left: 0; animation-delay: 2.4s; }
         .orbit-star:nth-child(10) { top: 10%; left: 10%; animation-delay: 2.7s; }
 
-        /* Ultimate Dark Star - หมุนลื่นไหลแบบง่ายๆ */
+        /* ✨ ปรับปรุง Dark Star - เพิ่ม wave motion */
         .dark-star-ultimate {
             position: absolute;
             width: var(--star-size);
@@ -289,30 +315,39 @@
         @keyframes starGrandEntry {
             0% {
                 left: calc(-1 * var(--star-offset));
+                top: 50%;
                 transform: translateY(-50%) rotate(0deg) scale(0.9);
                 filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.8));
             }
+            25% {
+                top: 45%;
+            }
             45% {
                 left: 50%;
+                top: 50%;
                 transform: translateY(-50%) translateX(-50%) rotate(180deg) scale(1.3);
                 filter: drop-shadow(0 0 80px rgba(75, 0, 130, 1)) 
                         drop-shadow(0 0 120px rgba(138, 43, 226, 0.9));
             }
             55% {
                 left: 50%;
+                top: 50%;
                 transform: translateY(-50%) translateX(-50%) rotate(180deg) scale(1.3);
                 filter: drop-shadow(0 0 100px rgba(138, 43, 226, 1)) 
                         drop-shadow(0 0 150px rgba(147, 112, 219, 1))
                         drop-shadow(0 0 200px rgba(255, 215, 0, 0.8));
             }
+            75% {
+                top: 55%;
+            }
             100% {
                 left: calc(100% + var(--star-offset));
+                top: 50%;
                 transform: translateY(-50%) rotate(360deg) scale(0.8);
                 filter: drop-shadow(0 0 20px rgba(75, 0, 130, 0.4));
             }
         }
 
-        /* เพิ่มวงแสงรอบดาวตอนอยู่กลางจอ */
         .star-energy-ring {
             position: absolute;
             width: var(--star-size);
@@ -354,7 +389,7 @@
         /* Divine Light Sweep */
         .divine-light {
             position: absolute;
-            width: min(40vmin, 400px);
+            width: clamp(200px, 40vmin, 400px);
             height: 100%;
             background: radial-gradient(ellipse at center,
                 rgba(218, 165, 32, 0.6) 0%,
@@ -423,18 +458,19 @@
             }
         }
 
-        /* Premium Title */
+        /* ✨ Interactive Title with Cursor Tracking */
         .title-container {
             position: relative;
             z-index: 25;
             text-align: center;
+            pointer-events: none;
         }
 
         .main-title {
             font-family: 'Cinzel Decorative', serif;
-            font-size: var(--title-size);
+            font-size: clamp(2rem, 8vw, 110px);
             font-weight: 900;
-            letter-spacing: var(--title-spacing);
+            letter-spacing: clamp(0.3rem, 1.6vw, 18px);
             background: linear-gradient(135deg, 
                 #daa520 0%,
                 #ffd700 25%,
@@ -453,9 +489,18 @@
             filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9))
                     drop-shadow(0 0 40px rgba(218, 165, 32, 0.8))
                     drop-shadow(0 5px 15px rgba(218, 165, 32, 0.6));
-            margin-bottom: calc(var(--title-size) * 0.27);
-            padding: 0 2vmin;
-            will-change: opacity, transform;
+            margin-bottom: clamp(1.5rem, 6vw, 30px);
+            padding: 0 clamp(1rem, 4vw, 40px);
+            will-change: opacity, transform, filter;
+            pointer-events: auto;
+            cursor: none;
+            transition: transform 0.1s ease-out;
+        }
+
+        .main-title:hover {
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1))
+                    drop-shadow(0 0 60px rgba(218, 165, 32, 1))
+                    drop-shadow(0 5px 20px rgba(218, 165, 32, 0.8));
         }
 
         @keyframes titleGrandReveal {
@@ -493,11 +538,35 @@
             }
         }
 
+        /* Title hover particles */
+        .title-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffd700 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: titleParticleFloat 1.5s ease-out forwards;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            z-index: 26;
+        }
+
+        @keyframes titleParticleFloat {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
         .subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1rem, 3vmin, 32px);
+            font-size: clamp(1rem, 3vw, 32px);
             font-weight: 600;
-            letter-spacing: clamp(0.2rem, 0.8vmin, 8px);
+            letter-spacing: clamp(0.2rem, 0.8vw, 8px);
             color: #e6d5f0;
             opacity: 0;
             text-shadow: 0 0 30px rgba(218, 165, 32, 0.9),
@@ -505,7 +574,7 @@
                         0 2px 10px rgba(0, 0, 0, 0.8);
             animation: subtitleReveal 2.5s ease-out 7.5s forwards;
             font-style: italic;
-            padding: 0 2vmin;
+            padding: 0 clamp(1rem, 4vw, 40px);
         }
 
         @keyframes subtitleReveal {
@@ -533,6 +602,7 @@
             pointer-events: none;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
         }
+
         .premium-button {
             position: fixed;
             bottom: clamp(2rem, 6vmin, 60px);
@@ -550,7 +620,7 @@
                 rgba(45, 27, 78, 0.9) 100%);
             border: clamp(2px, 0.3vmin, 3px) solid #daa520;
             border-radius: 60px;
-            cursor: pointer;
+            cursor: none;
             opacity: 0;
             z-index: 30;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -560,6 +630,7 @@
                         inset 0 0 30px rgba(147, 112, 219, 0.3);
             animation: buttonGrandReveal 1.5s ease-out 9s forwards;
             overflow: hidden;
+            pointer-events: auto;
         }
 
         .premium-button::before {
@@ -688,9 +759,10 @@
                 rgba(138, 43, 226, 0.9) 100%);
             border: 2px solid #daa520;
             border-radius: 30px;
-            cursor: pointer;
+            cursor: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
+            pointer-events: auto;
         }
 
         .copy-btn:hover {
@@ -719,80 +791,111 @@
                 transform: translateY(-250px) translateX(var(--drift)) scale(2) rotate(360deg);
             }
         }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+            
+            .custom-cursor,
+            .cursor-trail {
+                display: none;
+            }
+            
+            .premium-button,
+            .copy-btn {
+                cursor: pointer;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="magic-container">
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+    <div class="magic-container" id="magicContainer">
         <!-- Nebula Background -->
         <div class="nebula-bg"></div>
 
         <!-- 3D Stars -->
         <div class="stars-3d" id="starsContainer"></div>
 
-        <!-- Premium Magic Circle System -->
+        <!-- ✨ แก้ไขแล้ว - Premium Magic Circle System (ไม่เบี้ยว) -->
         <div class="magic-circle-system">
             <!-- Outer Universe Circle -->
-            <div class="circle-layer outer-universe">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(147, 112, 219, 0.6)" stroke-width="1"/>
-                    <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="2"/>
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="1" stroke-dasharray="8,4"/>
-                    <polygon points="100,10 110,60 160,70 120,95 130,145 100,120 70,145 80,95 40,70 90,60" 
-                             fill="none" stroke="rgba(147, 112, 219, 0.6)" stroke-width="2.5"/>
-                    <polygon points="100,10 120,80 190,80 130,120 150,190 100,145 50,190 70,120 10,80 80,80" 
-                             fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2"/>
-                </svg>
+            <div class="circle-center outer-universe">
+                <div class="circle-rotator">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(147, 112, 219, 0.6)" stroke-width="1"/>
+                        <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="1" stroke-dasharray="8,4"/>
+                        <polygon points="100,10 110,60 160,70 120,95 130,145 100,120 70,145 80,95 40,70 90,60" 
+                                 fill="none" stroke="rgba(147, 112, 219, 0.6)" stroke-width="2.5"/>
+                        <polygon points="100,10 120,80 190,80 130,120 150,190 100,145 50,190 70,120 10,80 80,80" 
+                                 fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Pentagram Grand -->
-            <div class="circle-layer pentagram-grand">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2.5"/>
-                    <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="1.5" stroke-dasharray="10,5"/>
-                    <polygon points="100,20 118,78 178,85 132,118 148,178 100,140 52,178 68,118 22,85 82,78" 
-                             fill="none" stroke="rgba(218, 165, 32, 0.6)" stroke-width="3"/>
-                    <circle cx="100" cy="20" r="5" fill="rgba(218, 165, 32, 0.8)"/>
-                    <circle cx="178" cy="85" r="5" fill="rgba(218, 165, 32, 0.8)"/>
-                    <circle cx="148" cy="178" r="5" fill="rgba(218, 165, 32, 0.8)"/>
-                    <circle cx="52" cy="178" r="5" fill="rgba(218, 165, 32, 0.8)"/>
-                    <circle cx="22" cy="85" r="5" fill="rgba(218, 165, 32, 0.8)"/>
-                </svg>
+            <div class="circle-center pentagram-grand">
+                <div class="circle-rotator">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2.5"/>
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="1.5" stroke-dasharray="10,5"/>
+                        <polygon points="100,20 118,78 178,85 132,118 148,178 100,140 52,178 68,118 22,85 82,78" 
+                                 fill="none" stroke="rgba(218, 165, 32, 0.6)" stroke-width="3"/>
+                        <circle cx="100" cy="20" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                        <circle cx="178" cy="85" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                        <circle cx="148" cy="178" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                        <circle cx="52" cy="178" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                        <circle cx="22" cy="85" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Hexagram Divine -->
-            <div class="circle-layer hexagram-divine">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(138, 43, 226, 0.5)" stroke-width="2"/>
-                    <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
-                    <polygon points="100,30 125,75 175,85 135,115 145,165 100,135 55,165 65,115 25,85 75,75" 
-                             fill="none" stroke="rgba(138, 43, 226, 0.6)" stroke-width="2.5"/>
-                    <polygon points="100,170 125,125 175,115 135,85 145,35 100,65 55,35 65,85 25,115 75,125" 
-                             fill="none" stroke="rgba(138, 43, 226, 0.6)" stroke-width="2.5"/>
-                </svg>
+            <div class="circle-center hexagram-divine">
+                <div class="circle-rotator">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(138, 43, 226, 0.5)" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
+                        <polygon points="100,30 125,75 175,85 135,115 145,165 100,135 55,165 65,115 25,85 75,75" 
+                                 fill="none" stroke="rgba(138, 43, 226, 0.6)" stroke-width="2.5"/>
+                        <polygon points="100,170 125,125 175,115 135,85 145,35 100,65 55,35 65,85 25,115 75,125" 
+                                 fill="none" stroke="rgba(138, 43, 226, 0.6)" stroke-width="2.5"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Sacred Geometry -->
-            <div class="circle-layer sacred-geometry">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2.5"/>
-                    <circle cx="100" cy="100" r="65" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="1.5" stroke-dasharray="12,6"/>
-                    <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2"/>
-                    <line x1="100" y1="25" x2="100" y2="175" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
-                    <line x1="25" y1="100" x2="175" y2="100" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
-                    <line x1="38" y1="38" x2="162" y2="162" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1.5"/>
-                    <line x1="162" y1="38" x2="38" y2="162" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1.5"/>
-                </svg>
+            <div class="circle-center sacred-geometry">
+                <div class="circle-rotator">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2.5"/>
+                        <circle cx="100" cy="100" r="65" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="1.5" stroke-dasharray="12,6"/>
+                        <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2"/>
+                        <line x1="100" y1="25" x2="100" y2="175" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
+                        <line x1="25" y1="100" x2="175" y2="100" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
+                        <line x1="38" y1="38" x2="162" y2="162" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1.5"/>
+                        <line x1="162" y1="38" x2="38" y2="162" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1.5"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Inner Sanctum -->
-            <div class="circle-layer inner-sanctum">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(218, 165, 32, 0.6)" stroke-width="3"/>
-                    <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2.5"/>
-                    <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2"/>
-                    <polygon points="100,50 115,85 150,90 125,115 130,150 100,130 70,150 75,115 50,90 85,85" 
-                             fill="none" stroke="rgba(218, 165, 32, 0.7)" stroke-width="3"/>
-                </svg>
+            <div class="circle-center inner-sanctum">
+                <div class="circle-rotator">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(218, 165, 32, 0.6)" stroke-width="3"/>
+                        <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2.5"/>
+                        <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2"/>
+                        <polygon points="100,50 115,85 150,90 125,115 130,150 100,130 70,150 75,115 50,90 85,85" 
+                                 fill="none" stroke="rgba(218, 165, 32, 0.7)" stroke-width="3"/>
+                    </svg>
+                </div>
             </div>
         </div>
 
@@ -829,7 +932,6 @@
                     </filter>
                 </defs>
                 <g filter="url(#ultimateGlow)">
-                    <!-- 8-Point Star -->
                     <path d="M 100 15 L 112 75 L 170 60 L 125 100 L 160 145 L 105 125 L 100 185 L 95 125 L 40 145 L 75 100 L 30 60 L 88 75 Z" 
                           fill="url(#ultimateStarGradient)" stroke="#8B00FF" stroke-width="3"/>
                     <circle cx="100" cy="100" r="35" fill="#2d1654" stroke="#8B00FF" stroke-width="3"/>
@@ -864,9 +966,9 @@
         <!-- Celestial Reveal -->
         <div class="celestial-reveal"></div>
 
-        <!-- Title Container -->
+        <!-- ✨ Interactive Title Container -->
         <div class="title-container">
-            <h1 class="main-title">CROWN OF AETHERIA</h1>
+            <h1 class="main-title" id="mainTitle">CROWN OF AETHERIA</h1>
             <p class="subtitle">Join the Awakening of Aetheria</p>
         </div>
 
@@ -885,124 +987,101 @@
     </div>
 
     <script>
-        // ตรวจจับและปรับขนาดจริงๆ ตาม screen width ที่ผู้ใช้ตั้งค่าไว้
-        function detectAndAdjustLayout() {
-            // ใช้ screen.width/height จาก device settings (ค่าจริงของหน้าจอ)
-            const screenWidth = window.screen.width;
-            const screenHeight = window.screen.height;
-            
-            // ใช้ window.innerWidth/Height สำหรับพื้นที่ที่ใช้งานได้จริง (ไม่รวม browser UI)
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            const minDimension = Math.min(screenWidth, screenHeight);
-            const maxDimension = Math.max(screenWidth, screenHeight);
-            
-            // คำนวณ scale factor ตามขนาด screen width จริง
-            let scaleFactor = 1;
-            
-            if (minDimension < 400) {
-                // จอเล็กมาก (โทรศัพท์เก่า หรือ feature phone)
-                scaleFactor = minDimension / 400;
-            } else if (minDimension < 768) {
-                // จอมือถือปกติ (iPhone, Android)
-                scaleFactor = minDimension / 500;
-            } else if (minDimension < 1024) {
-                // แท็บเล็ต
-                scaleFactor = minDimension / 600;
-            } else if (minDimension < 1920) {
-                // คอมพิวเตอร์ทั่วไป
-                scaleFactor = minDimension / 800;
-            } else {
-                // จอความละเอียดสูง (4K, 5K)
-                scaleFactor = Math.min(minDimension / 1000, 1.5);
+        // ✨ Custom Cursor with Trail
+        const cursor = document.getElementById('cursor');
+        const cursorTrail = document.getElementById('cursorTrail');
+        const magicContainer = document.getElementById('magicContainer');
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+
+        // Detect if mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+        if (!isMobile) {
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Update cursor position
+                cursor.style.left = mouseX + 'px';
+                cursor.style.top = mouseY + 'px';
+                
+                // Update CSS variables for background effects
+                const xPercent = (mouseX / window.innerWidth) * 100;
+                const yPercent = (mouseY / window.innerHeight) * 100;
+                document.documentElement.style.setProperty('--cursor-x', xPercent + '%');
+                document.documentElement.style.setProperty('--cursor-y', yPercent + '%');
+            });
+
+            // Smooth trail animation
+            function animateTrail() {
+                trailX += (mouseX - trailX) * 0.15;
+                trailY += (mouseY - trailY) * 0.15;
+                
+                cursorTrail.style.left = trailX + 'px';
+                cursorTrail.style.top = trailY + 'px';
+                
+                requestAnimationFrame(animateTrail);
             }
-            
-            // ตรวจสอบ orientation
-            const isPortrait = screenHeight > screenWidth;
-            
-            // คำนวณ DPI/Pixel Density
-            const dpi = window.devicePixelRatio || 1;
-            
-            // ตั้งค่า CSS Variables
-            document.documentElement.style.setProperty('--scale-factor', scaleFactor);
-            document.documentElement.style.setProperty('--screen-width', screenWidth + 'px');
-            document.documentElement.style.setProperty('--screen-height', screenHeight + 'px');
-            document.documentElement.style.setProperty('--viewport-width', viewportWidth + 'px');
-            document.documentElement.style.setProperty('--viewport-height', viewportHeight + 'px');
-            document.documentElement.style.setProperty('--min-dimension', minDimension + 'px');
-            document.documentElement.style.setProperty('--pixel-ratio', dpi);
-            
-            // ปรับขนาดองค์ประกอบตาม screen width จริง
-            const root = document.documentElement;
-            
-            // ใช้ minDimension จาก screen.width/height (ค่าจริงของหน้าจอ)
-            const baseSize = minDimension;
-            
-            // วงเวทมนตร์ - ปรับตามขนาดจอจริง
-            const circleSize = baseSize * 0.85 * scaleFactor;
-            root.style.setProperty('--circle-outer', Math.min(circleSize, 900) + 'px');
-            root.style.setProperty('--circle-penta', Math.min(circleSize * 0.83, 750) + 'px');
-            root.style.setProperty('--circle-hexa', Math.min(circleSize * 0.67, 600) + 'px');
-            root.style.setProperty('--circle-sacred', Math.min(circleSize * 0.5, 450) + 'px');
-            root.style.setProperty('--circle-inner', Math.min(circleSize * 0.36, 320) + 'px');
-            root.style.setProperty('--circle-orbit', Math.min(circleSize * 0.55, 500) + 'px');
-            
-            // ดาว - ปรับตามขนาดจอจริง
-            const starSize = Math.min(baseSize * 0.28 * scaleFactor, 280);
-            root.style.setProperty('--star-size', starSize + 'px');
-            root.style.setProperty('--star-offset', (starSize * 1.3) + 'px');
-            
-            // ข้อความ - ปรับตามขนาดจอจริง
-            const titleSize = Math.max(Math.min(baseSize * 0.08 * scaleFactor, 110), 28);
-            const subtitleSize = Math.max(Math.min(baseSize * 0.032 * scaleFactor, 32), 14);
-            root.style.setProperty('--title-size', titleSize + 'px');
-            root.style.setProperty('--subtitle-size', subtitleSize + 'px');
-            root.style.setProperty('--title-spacing', (titleSize * 0.16) + 'px');
-            root.style.setProperty('--subtitle-spacing', (subtitleSize * 0.25) + 'px');
-            
-            // ปุ่มและกล่อง - ปรับตามขนาดจอจริง
-            const buttonPadding = Math.max(baseSize * 0.02, 12);
-            const buttonFontSize = Math.max(Math.min(baseSize * 0.02, 20), 14);
-            root.style.setProperty('--button-padding-v', buttonPadding + 'px');
-            root.style.setProperty('--button-padding-h', (buttonPadding * 2.5) + 'px');
-            root.style.setProperty('--button-font', buttonFontSize + 'px');
-            root.style.setProperty('--button-bottom', Math.max(baseSize * 0.05, 30) + 'px');
-            
-            // Link container
-            const linkPadding = Math.max(baseSize * 0.035, 20);
-            const linkFontSize = Math.max(Math.min(baseSize * 0.02, 20), 14);
-            root.style.setProperty('--link-padding', linkPadding + 'px');
-            root.style.setProperty('--link-font', linkFontSize + 'px');
-            
-            // ปรับ particle ให้เหมาะกับหน้าจอ
-            const particleCount = baseSize < 768 ? 20 : 30;
-            root.style.setProperty('--particle-count', particleCount);
-            
-            // แสดงข้อมูลใน console
-            console.log(`📱 Device Screen: ${screenWidth}x${screenHeight} (${minDimension}px min)`);
-            console.log(`🖥️  Viewport: ${viewportWidth}x${viewportHeight}`);
-            console.log(`📊 Scale: ${scaleFactor.toFixed(2)}, DPI: ${dpi}x, Portrait: ${isPortrait}`);
-            console.log(`🎨 Title: ${titleSize.toFixed(0)}px, Button: ${buttonFontSize.toFixed(0)}px`);
+            animateTrail();
         }
 
-        // เรียกใช้ทันทีและเมื่อ resize/orientation change
-        detectAndAdjustLayout();
-        
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(detectAndAdjustLayout, 100);
-        });
-        
-        window.addEventListener('orientationchange', () => {
-            setTimeout(detectAndAdjustLayout, 200);
-        });
-        
-        // ตรวจสอบอีกครั้งเมื่อโหลดเสร็จสมบูรณ์
-        window.addEventListener('load', detectAndAdjustLayout);
+        // ✨ Interactive Title with Hover Particles
+        const mainTitle = document.getElementById('mainTitle');
+        let particleInterval;
 
-        // สร้าง Audio Context
+        if (!isMobile) {
+            mainTitle.addEventListener('mouseenter', () => {
+                particleInterval = setInterval(() => {
+                    createTitleParticle();
+                }, 50);
+            });
+
+            mainTitle.addEventListener('mouseleave', () => {
+                clearInterval(particleInterval);
+            });
+
+            mainTitle.addEventListener('mousemove', (e) => {
+                const rect = mainTitle.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Subtle 3D tilt effect
+                const xRotate = ((y / rect.height) - 0.5) * 5;
+                const yRotate = ((x / rect.width) - 0.5) * -5;
+                
+                mainTitle.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg)`;
+            });
+
+            mainTitle.addEventListener('mouseleave', () => {
+                mainTitle.style.transform = '';
+            });
+        }
+
+        function createTitleParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'title-particle';
+            
+            const rect = mainTitle.getBoundingClientRect();
+            const x = rect.left + Math.random() * rect.width;
+            const y = rect.top + Math.random() * rect.height;
+            
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            
+            const tx = (Math.random() - 0.5) * 100;
+            const ty = (Math.random() - 0.5) * 100;
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 1500);
+        }
+
+        // Audio Context
         let audioContext;
         let isSoundEnabled = true;
 
@@ -1015,7 +1094,6 @@
             }
         }
 
-        // ฟังก์ชันสร้างเสียง
         function playTone(frequency, duration, type = 'sine', volume = 0.3) {
             if (!isSoundEnabled || !audioContext) return;
 
@@ -1036,7 +1114,6 @@
             oscillator.stop(audioContext.currentTime + duration);
         }
 
-        // เสียงพื้นฐานเวทมนตร์
         function playMagicAmbient() {
             if (!isSoundEnabled || !audioContext) return;
 
@@ -1121,11 +1198,10 @@
             setTimeout(() => playTextReveal(), 6500);
         }
 
-        // Create 3D Stars - ปรับจำนวนตาม screen width จริง
+        // Create 3D Stars
         function create3DStars() {
             const container = document.getElementById('starsContainer');
-            const screenMin = Math.min(window.screen.width, window.screen.height);
-            const starCount = screenMin < 768 ? 80 : 150;
+            const starCount = isMobile ? 80 : 150;
             
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
@@ -1138,11 +1214,10 @@
             }
         }
 
-        // Create Premium Particles - ปรับตาม screen width จริง
+        // Create Premium Particles
         function createPremiumParticles() {
             const container = document.getElementById('particlesContainer');
-            const screenMin = Math.min(window.screen.width, window.screen.height);
-            const interval = screenMin < 768 ? 400 : 200;
+            const interval = isMobile ? 400 : 200;
             
             setInterval(() => {
                 const particle = document.createElement('div');
@@ -1222,7 +1297,7 @@
         create3DStars();
         createPremiumParticles();
         
-        // เริ่มเสียงเมื่อโหลดหน้าเสร็จ
+        // Start sound on first interaction
         window.addEventListener('load', () => {
             document.addEventListener('click', function initSound() {
                 startSoundSequence();
