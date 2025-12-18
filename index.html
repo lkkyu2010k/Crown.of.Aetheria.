@@ -1,753 +1,922 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crown of Aetheria - Magical Star Reveal</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&amp;family=Cinzel:wght@400;600&amp;display=swap" rel="stylesheet">
-  <style>
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-    }
-
-    .magic-container {
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0520 50%, #000000 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* พื้นหลังเวทมนตร์ */
-    .magic-particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-    }
-
-    .magic-circle-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-    }
-
-    /* วงเวทย์ชั้นนอกสุด */
-    .outer-pentagram {
-      position: absolute;
-      width: 800px;
-      height: 800px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: rotate 35s linear infinite;
-    }
-
-    .outer-pentagram svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 20px rgba(147, 112, 219, 0.4));
-    }
-
-    /* วงเวทย์ดาวหกแฉก */
-    .hexagram-layer {
-      position: absolute;
-      width: 650px;
-      height: 650px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: rotate 25s linear infinite reverse;
-    }
-
-    .hexagram-layer svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 15px rgba(218, 165, 32, 0.3));
-    }
-
-    /* วงเวทย์วงกลมซับซ้อน */
-    .complex-circle {
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: rotate 20s linear infinite;
-    }
-
-    .complex-circle svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.3));
-    }
-
-
-
-    /* ดาวเล็กโคจร */
-    .orbiting-stars {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: rotate 15s linear infinite;
-    }
-
-    .mini-star {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: radial-gradient(circle, rgba(218, 165, 32, 1) 0%, transparent 70%);
-      border-radius: 50%;
-      box-shadow: 0 0 15px rgba(218, 165, 32, 0.8);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    .mini-star:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
-    .mini-star:nth-child(2) { top: 25%; right: 0; animation-delay: 0.2s; }
-    .mini-star:nth-child(3) { bottom: 25%; right: 0; animation-delay: 0.4s; }
-    .mini-star:nth-child(4) { bottom: 0; left: 50%; transform: translateX(-50%); animation-delay: 0.6s; }
-    .mini-star:nth-child(5) { bottom: 25%; left: 0; animation-delay: 0.8s; }
-    .mini-star:nth-child(6) { top: 25%; left: 0; animation-delay: 1s; }
-
-    @keyframes pulse {
-      0%, 100% { 
-        opacity: 0.6;
-        transform: scale(1);
-      }
-      50% { 
-        opacity: 1;
-        transform: scale(1.5);
-      }
-    }
-
-    /* วงเวทย์ภายใน */
-    .inner-magic-circle {
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: rotate 18s linear infinite reverse;
-    }
-
-    .inner-magic-circle svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.5));
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* ข้อความที่ซ่อน��ยู่ */
-    .title-wrapper {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .main-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 90px;
-      font-weight: 900;
-      letter-spacing: 12px;
-      background: linear-gradient(135deg, 
-        #2d1b4e 0%,
-        #4a2c6b 25%,
-        #daa520 50%,
-        #4a2c6b 75%,
-        #2d1b4e 100%
-      );
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 40px rgba(218, 165, 32, 0.3);
-      opacity: 0;
-      animation: fadeInText 2s ease-out 6s forwards, shimmer 4s ease-in-out 8s infinite;
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    @keyframes fadeInText {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-        filter: blur(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0);
-      }
-    }
-
-    @keyframes shimmer {
-      0%, 100% {
-        background-position: 0% 50%;
-        text-shadow: 0 0 40px rgba(218, 165, 32, 0.3);
-      }
-      50% {
-        background-position: 100% 50%;
-        text-shadow: 0 0 60px rgba(147, 112, 219, 0.6),
-                     0 0 80px rgba(218, 165, 32, 0.4);
-      }
-    }
-
-    .subtitle {
-      font-family: 'Cinzel', serif;
-      font-size: 24px;
-      font-weight: 400;
-      letter-spacing: 6px;
-      color: #9370db;
-      opacity: 0;
-      text-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
-      animation: fadeInSubtitle 2s ease-out 7s forwards;
-    }
-
-    @keyframes fadeInSubtitle {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 0.9;
-        transform: translateY(0);
-      }
-    }
-
-    /* ดาวสีดำทมิฬที่เลื่อน */
-    .dark-star {
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      left: -250px;
-      top: 50%;
-      transform: translateY(-50%);
-      animation: starSlide 6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      z-index: 10;
-      filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.8));
-    }
-
-    @keyframes starSlide {
-      0% {
-        left: -250px;
-        transform: translateY(-50%) rotate(0deg) scale(1);
-        filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.8));
-      }
-      45% {
-        left: 50%;
-        transform: translateY(-50%) translateX(-50%) rotate(180deg) scale(1.2);
-        filter: drop-shadow(0 0 60px rgba(75, 0, 130, 1)) 
-                drop-shadow(0 0 90px rgba(138, 43, 226, 0.8));
-      }
-      100% {
-        left: calc(100% + 250px);
-        transform: translateY(-50%) rotate(360deg) scale(0.8);
-        filter: drop-shadow(0 0 20px rgba(75, 0, 130, 0.4));
-      }
-    }
-
-    /* แสงสว่างที่ดาวฉายผ่าน */
-    .light-reveal {
-      position: absolute;
-      width: 300px;
-      height: 100%;
-      background: radial-gradient(ellipse at center,
-        rgba(218, 165, 32, 0.4) 0%,
-        rgba(147, 112, 219, 0.3) 30%,
-        transparent 70%
-      );
-      left: -300px;
-      top: 0;
-      animation: lightSweep 6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      z-index: 5;
-      filter: blur(20px);
-      mix-blend-mode: screen;
-    }
-
-    @keyframes lightSweep {
-      0% {
-        left: -300px;
-        opacity: 0;
-      }
-      20% {
-        opacity: 1;
-      }
-      80% {
-        opacity: 1;
-      }
-      100% {
-        left: calc(100% + 300px);
-        opacity: 0;
-      }
-    }
-
-    /* แสงเปิดเผยข้อความ */
-    .text-reveal-light {
-      position: absolute;
-      width: 100%;
-      height: 200px;
-      background: radial-gradient(ellipse at center,
-        rgba(218, 165, 32, 0.6) 0%,
-        rgba(147, 112, 219, 0.4) 40%,
-        transparent 70%
-      );
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
-      animation: revealExpand 2s ease-out 6s forwards;
-      z-index: 1;
-      filter: blur(30px);
-      mix-blend-mode: screen;
-    }
-
-    @keyframes revealExpand {
-      0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.5);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(2);
-        opacity: 0;
-      }
-    }
-
-    /* อนุภาคเวทมนตร์ลอย */
-    .floating-particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: radial-gradient(circle, #daa520 0%, transparent 70%);
-      border-radius: 50%;
-      opacity: 0;
-      animation: floatUp 4s ease-in infinite;
-      pointer-events: none;
-    }
-
-    @keyframes floatUp {
-      0% {
-        opacity: 0;
-        transform: translateY(0) translateX(0) scale(0);
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-200px) translateX(var(--drift)) scale(1.5);
-      }
-    }
-
-    /* ปุ่มเข้าร่วม */
-    .restart-button {
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 16px 40px;
-      font-family: 'Cinzel', serif;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      color: #daa520;
-      background: rgba(45, 27, 78, 0.6);
-      border: 2px solid #daa520;
-      border-radius: 50px;
-      cursor: pointer;
-      opacity: 0;
-      z-index: 20;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(218, 165, 32, 0.3),
-                  inset 0 0 20px rgba(147, 112, 219, 0.2);
-      animation: buttonFadeIn 1s ease-out 8s forwards;
-    }
-
-    @keyframes buttonFadeIn {
-      to {
-        opacity: 1;
-      }
-    }
-
-    .restart-button:hover {
-      background: rgba(45, 27, 78, 0.9);
-      box-shadow: 0 0 40px rgba(218, 165, 32, 0.6),
-                  inset 0 0 30px rgba(147, 112, 219, 0.4);
-      transform: translateX(-50%) scale(1.05);
-      color: #fff;
-    }
-
-    .restart-button:active {
-      transform: translateX(-50%) scale(0.98);
-    }
-
-    /* กล่องแสดงลิงก์ */
-    .link-display {
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(45, 27, 78, 0.95);
-      border: 2px solid #daa520;
-      border-radius: 20px;
-      padding: 20px 30px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 30px rgba(218, 165, 32, 0.4),
-                  inset 0 0 20px rgba(147, 112, 219, 0.2);
-      z-index: 20;
-      display: none;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .link-display.show {
-      display: flex;
-      animation: fadeInScale 0.3s ease-out;
-    }
-
-    @keyframes fadeInScale {
-      from {
-        opacity: 0;
-        transform: translateX(-50%) scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(-50%) scale(1);
-      }
-    }
-
-    .link-text {
-      font-family: 'Cinzel', serif;
-      font-size: 16px;
-      color: #9370db;
-      letter-spacing: 2px;
-      margin-bottom: 5px;
-    }
-
-    .link-url {
-      font-family: 'Courier New', monospace;
-      font-size: 18px;
-      color: #daa520;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: 1px solid rgba(218, 165, 32, 0.3);
-      user-select: all;
-      cursor: text;
-      text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
-    }
-
-    .copy-button {
-      padding: 10px 30px;
-      font-family: 'Cinzel', serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      color: #daa520;
-      background: rgba(45, 27, 78, 0.8);
-      border: 2px solid #daa520;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .copy-button:hover {
-      background: rgba(45, 27, 78, 1);
-      box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
-      transform: scale(1.05);
-      color: #fff;
-    }
-
-    .copy-button.copied {
-      background: rgba(34, 139, 34, 0.8);
-      border-color: #90ee90;
-      color: #90ee90;
-    }
-
-    /* เอฟเฟกต์ดาว SVG */
-    .star-glow {
-      animation: starPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes starPulse {
-      0%, 100% {
-        filter: drop-shadow(0 0 10px rgba(75, 0, 130, 0.8));
-      }
-      50% {
-        filter: drop-shadow(0 0 30px rgba(138, 43, 226, 1))
-                drop-shadow(0 0 50px rgba(75, 0, 130, 0.6));
-      }
-    }
-  </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body>
-  <div class="magic-container"><!-- วงกลมเวทมนตร์พื้นหลัง -->
-   <div class="magic-particles"><!-- วงเวทย์ดาวห้าแฉกนอกสุด -->
-    <div class="outer-pentagram">
-     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,20 115,75 170,75 125,110 140,165 100,130 60,165 75,110 30,75 85,75" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2" /> <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(147, 112, 219, 0.3)" stroke-width="1" /> <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(147, 112, 219, 0.2)" stroke-width="1" stroke-dasharray="5,5" />
-     </svg>
-    </div><!-- วงเวทย์ดาวหกแฉก -->
-    <div class="hexagram-layer">
-     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,30 130,80 180,90 130,110 140,160 100,130 60,160 70,110 20,90 70,80" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2" /> <polygon points="100,170 130,120 180,110 130,90 140,40 100,70 60,40 70,90 20,110 70,120" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2" /> <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(218, 165, 32, 0.3)" stroke-width="1.5" />
-     </svg>
-    </div><!-- วงเวทย์ซับซ้อน -->
-    <div class="complex-circle">
-     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="none" stroke="rgba(138, 43, 226, 0.4)" stroke-width="2" /> <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1" stroke-dasharray="10,5" /> <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1" /> <line x1="100" y1="10" x2="100" y2="190" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" /> <line x1="10" y1="100" x2="190" y2="100" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" /> <line x1="30" y1="30" x2="170" y2="170" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" /> <line x1="170" y1="30" x2="30" y2="170" stroke="rgba(138, 43, 226, 0.2)" stroke-width="1" />
-     </svg>
-    </div><!-- ดาวเล็กโคจร -->
-    <div class="orbiting-stars">
-     <div class="mini-star"></div>
-     <div class="mini-star"></div>
-     <div class="mini-star"></div>
-     <div class="mini-star"></div>
-     <div class="mini-star"></div>
-     <div class="mini-star"></div>
-    </div><!-- วงเวทย์ภายใน -->
-    <div class="inner-magic-circle">
-     <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="none" stroke="rgba(138, 43, 226, 0.5)" stroke-width="3" /> <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2" /> <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="2" /> <polygon points="100,50 120,90 160,90 130,115 140,155 100,130 60,155 70,115 40,90 80,90" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2" />
-     </svg>
-    </div>
-   </div><!-- ดาวสีดำทมิฬ -->
-   <div class="dark-star">
-    <svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs>
-      <radialgradient id="starGradient">
-       <stop offset="0%" style="stop-color:#4B0082;stop-opacity:1" />
-       <stop offset="50%" style="stop-color:#2d1654;stop-opacity:1" />
-       <stop offset="100%" style="stop-color:#1a0a33;stop-opacity:1" />
-      </radialgradient>
-      <filter id="starGlow">
-       <fegaussianblur stddeviation="3" result="coloredBlur" />
-       <femerge>
-        <femergenode in="coloredBlur" />
-        <femergenode in="SourceGraphic" />
-       </femerge>
-      </filter>
-     </defs> <!-- ดาว 8 แฉก --> <g class="star-glow" filter="url(#starGlow)">
-      <path d="M 100 20 L 110 80 L 170 70 L 120 100 L 150 150 L 100 120 L 50 150 L 80 100 L 30 70 L 90 80 Z" fill="url(#starGradient)" stroke="#8a2be2" stroke-width="2" />
-      <circle cx="100" cy="100" r="25" fill="#2d1654" stroke="#4B0082" stroke-width="2" /> <!-- รายละเอียดเพิ่มเติม -->
-      <circle cx="100" cy="100" r="15" fill="none" stroke="#8a2be2" stroke-width="1" opacity="0.6" />
-      <circle cx="100" cy="100" r="8" fill="#4B0082" opacity="0.8" />
-     </g>
-    </svg>
-   </div><!-- ���สงสว่างที่ดาวฉาย -->
-   <div class="light-reveal"></div><!-- แสงเปิดเ��ยข้อความ -->
-   <div class="text-reveal-light"></div><!-- ข้อความ -->
-   <div class="title-wrapper">
-    <h1 class="main-title" id="mainTitle">CROWN OF AETHERIA</h1>
-    <p class="subtitle" id="subtitle">Join the Awakening of Aetheria.</p>
-   </div><!-- อนุภาคเวทมนตร์ -->
-   <div id="particlesContainer"></div><!-- ปุ่มเข้าร่วม --> <button class="restart-button" id="joinBtn">เข้าร่วม</button> <!-- กล่องแสดงลิงก์ -->
-   <div class="link-display" id="linkDisplay">
-    <div class="link-text">
-     ลิงก์ Discord
-    </div>
-    <div class="link-url" id="discordLink">
-     https://discord.gg/TSVtmWSrX
-    </div><button class="copy-button" id="copyBtn">คัดลอกลิงก์</button>
-   </div>
-  </div>
-  <script>
-    const defaultConfig = {
-      title_text: "CROWN OF AETHERIA",
-      subtitle_text: "Ancient Magic Unveiled",
-      background_color: "#1a0a2e",
-      star_color: "#4B0082",
-      text_color: "#daa520"
-    };
-
-    let config = { ...defaultConfig };
-
-    // สร��างอนุภา��เวทมนตร์
-    function createMagicParticles() {
-      const container = document.getElementById('particlesContainer');
-      container.innerHTML = '';
-      
-      for (let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'floating-particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 4 + 's';
-        particle.style.setProperty('--drift', (Math.random() - 0.5) * 100 + 'px');
-        container.appendChild(particle);
-      }
-    }
-
-    // เมื่อกดปุ่มเข้าร่วม แสดงลิงก์
-    const joinButton = document.getElementById('joinBtn');
-    const linkDisplay = document.getElementById('linkDisplay');
-    const copyBtn = document.getElementById('copyBtn');
-    const discordLink = document.getElementById('discordLink');
-
-    if (joinButton && linkDisplay) {
-      joinButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        joinButton.style.display = 'none';
-        linkDisplay.classList.add('show');
-      });
-    }
-
-    // ฟังก์ชันคัดลอกลิงก์
-    if (copyBtn && discordLink) {
-      copyBtn.addEventListener('click', function() {
-        const linkText = discordLink.textContent;
-        
-        // คัดลอกลิงก์
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(linkText).then(() => {
-            copyBtn.textContent = 'คัดลอกแล้ว!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-              copyBtn.textContent = 'คัดลอกลิงก์';
-              copyBtn.classList.remove('copied');
-            }, 2000);
-          }).catch(() => {
-            fallbackCopy(linkText);
-          });
-        } else {
-          fallbackCopy(linkText);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crown of Aetheria - Ultimate Magical Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      });
-    }
 
-    // วิธีสำรองในการคัดลอก
-    function fallbackCopy(text) {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      document.body.appendChild(textArea);
-      textArea.select();
-      
-      try {
-        document.execCommand('copy');
-        copyBtn.textContent = 'ว!';
-        copyBtn.classList.add('copied');
-        
-        setTimeout(() => {
-          copyBtn.textContent = 'คัดลอกลิงก์';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      } catch (err) {
-        copyBtn.textContent = 'เลือกลิงก์เพื่อคัดลอก';
-      }
-      
-      document.body.removeChild(textArea);
-    }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Cinzel', serif;
+        }
 
-    async function onConfigChange(newConfig) {
-      const container = document.querySelector('.magic-container');
-      const bgColor = newConfig.background_color || defaultConfig.background_color;
-      container.style.background = `radial-gradient(ellipse at center, ${bgColor} 0%, #0d0520 50%, #000000 100%)`;
+        .magic-container {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, 
+                #0a0015 0%, 
+                #1a0a2e 30%, 
+                #0d0520 60%, 
+                #000000 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-      const titleText = newConfig.title_text || defaultConfig.title_text;
-      const subtitleText = newConfig.subtitle_text || defaultConfig.subtitle_text;
-      
-      document.getElementById('mainTitle').textContent = titleText;
-      document.getElementById('subtitle').textContent = subtitleText;
+        /* Enhanced 3D Stars Background */
+        .stars-3d {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
 
-      const starColor = newConfig.star_color || defaultConfig.star_color;
-      const starGradient = document.getElementById('starGradient');
-      if (starGradient) {
-        starGradient.innerHTML = `
-          <stop offset="0%" style="stop-color:${starColor};stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#2d1654;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#1a0a33;stop-opacity:1" />
-        `;
-      }
+        .star-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
 
-      const textColor = newConfig.text_color || defaultConfig.text_color;
-      const button = document.querySelector('.restart-button');
-      if (button) {
-        button.style.color = textColor;
-        button.style.borderColor = textColor;
-      }
-    }
+        .twinkle-star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8),
+                        0 0 8px rgba(147, 112, 219, 0.6);
+        }
 
-    const elementApi = {
-      defaultConfig,
-      onConfigChange,
-      mapToCapabilities: (config) => ({
-        recolorables: [
-          {
-            get: () => config.background_color || defaultConfig.background_color,
-            set: (value) => {
-              config.background_color = value;
-              window.elementSdk.setConfig({ background_color: value });
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Nebula Background */
+        .nebula-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(147, 112, 219, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(218, 165, 32, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 60%);
+            animation: nebulaShift 20s ease-in-out infinite;
+            filter: blur(60px);
+        }
+
+        @keyframes nebulaShift {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+        }
+
+        /* Ultra Premium Magic Circles */
+        .magic-circle-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: circleFadeOut 2s ease-out 6.5s forwards;
+        }
+
+        @keyframes circleFadeOut {
+            0% {
+                opacity: 1;
             }
-          },
-          {
-            get: () => config.star_color || defaultConfig.star_color,
-            set: (value) => {
-              config.star_color = value;
-              window.elementSdk.setConfig({ star_color: value });
+            100% {
+                opacity: 0.2;
             }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
+        }
+
+        .circle-layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .outer-universe {
+            width: 900px;
+            height: 900px;
+            animation: rotateUniverse 60s linear infinite;
+        }
+
+        .outer-universe svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 30px rgba(147, 112, 219, 0.6));
+        }
+
+        @keyframes rotateUniverse {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .pentagram-grand {
+            width: 750px;
+            height: 750px;
+            animation: rotatePentagram 40s linear infinite reverse;
+        }
+
+        .pentagram-grand svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.5));
+        }
+
+        @keyframes rotatePentagram {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .hexagram-divine {
+            width: 600px;
+            height: 600px;
+            animation: rotateHexagram 30s linear infinite;
+        }
+
+        .hexagram-divine svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.5));
+        }
+
+        @keyframes rotateHexagram {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .sacred-geometry {
+            width: 450px;
+            height: 450px;
+            animation: rotateSacred 25s linear infinite reverse;
+        }
+
+        .sacred-geometry svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 15px rgba(147, 112, 219, 0.4));
+        }
+
+        @keyframes rotateSacred {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .inner-sanctum {
+            width: 320px;
+            height: 320px;
+            animation: rotateInner 20s linear infinite;
+        }
+
+        .inner-sanctum svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 25px rgba(218, 165, 32, 0.6));
+        }
+
+        @keyframes rotateInner {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Cosmic Orbiting Stars */
+        .cosmic-orbit {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: orbitSpin 18s linear infinite, orbitFadeOut 2s ease-out 6.5s forwards;
+        }
+
+        @keyframes orbitFadeOut {
+            0% {
+                opacity: 1;
             }
-          }
-        ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      }),
-      mapToEditPanelValues: (config) => new Map([
-        ["title_text", config.title_text || defaultConfig.title_text],
-        ["subtitle_text", config.subtitle_text || defaultConfig.subtitle_text]
-      ])
-    };
+            100% {
+                opacity: 0.3;
+            }
+        }
 
-    if (window.elementSdk) {
-      window.elementSdk.init(elementApi);
-      config = window.elementSdk.config;
-    }
+        @keyframes orbitSpin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
 
-    // เริ่มต้น
-    createMagicParticles();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9aefb29703ab447c',t:'MTc2NTkwNDAxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+        .orbit-star {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle, rgba(218, 165, 32, 1) 0%, rgba(218, 165, 32, 0) 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(218, 165, 32, 1),
+                        0 0 40px rgba(218, 165, 32, 0.6),
+                        0 0 60px rgba(218, 165, 32, 0.3);
+            animation: starPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes starPulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+
+        .orbit-star:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+        .orbit-star:nth-child(2) { top: 10%; right: 10%; animation-delay: 0.3s; }
+        .orbit-star:nth-child(3) { top: 35%; right: 0; animation-delay: 0.6s; }
+        .orbit-star:nth-child(4) { bottom: 35%; right: 0; animation-delay: 0.9s; }
+        .orbit-star:nth-child(5) { bottom: 10%; right: 10%; animation-delay: 1.2s; }
+        .orbit-star:nth-child(6) { bottom: 0; left: 50%; transform: translateX(-50%); animation-delay: 1.5s; }
+        .orbit-star:nth-child(7) { bottom: 10%; left: 10%; animation-delay: 1.8s; }
+        .orbit-star:nth-child(8) { bottom: 35%; left: 0; animation-delay: 2.1s; }
+        .orbit-star:nth-child(9) { top: 35%; left: 0; animation-delay: 2.4s; }
+        .orbit-star:nth-child(10) { top: 10%; left: 10%; animation-delay: 2.7s; }
+
+        /* Ultimate Dark Star */
+        .dark-star-ultimate {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            left: -350px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: starGrandEntry 7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            z-index: 20;
+            filter: drop-shadow(0 0 40px rgba(75, 0, 130, 1))
+                    drop-shadow(0 0 80px rgba(138, 43, 226, 0.8));
+        }
+
+        @keyframes starGrandEntry {
+            0% {
+                left: -350px;
+                transform: translateY(-50%) rotate(0deg) scale(0.8);
+                filter: drop-shadow(0 0 40px rgba(75, 0, 130, 1));
+            }
+            40% {
+                left: 50%;
+                transform: translateY(-50%) translateX(-50%) rotate(360deg) scale(1.4);
+                filter: drop-shadow(0 0 100px rgba(75, 0, 130, 1)) 
+                        drop-shadow(0 0 150px rgba(138, 43, 226, 1))
+                        drop-shadow(0 0 200px rgba(147, 112, 219, 0.8));
+            }
+            60% {
+                left: 50%;
+                transform: translateY(-50%) translateX(-50%) rotate(360deg) scale(1.4);
+            }
+            100% {
+                left: calc(100% + 350px);
+                transform: translateY(-50%) rotate(720deg) scale(0.6);
+                filter: drop-shadow(0 0 30px rgba(75, 0, 130, 0.5));
+            }
+        }
+
+        /* Divine Light Sweep */
+        .divine-light {
+            position: absolute;
+            width: 400px;
+            height: 100%;
+            background: radial-gradient(ellipse at center,
+                rgba(218, 165, 32, 0.6) 0%,
+                rgba(255, 215, 0, 0.5) 20%,
+                rgba(147, 112, 219, 0.4) 40%,
+                transparent 70%
+            );
+            left: -400px;
+            top: 0;
+            animation: divineSweep 7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            z-index: 15;
+            filter: blur(30px);
+            mix-blend-mode: screen;
+        }
+
+        @keyframes divineSweep {
+            0% {
+                left: -400px;
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100% + 400px);
+                opacity: 0;
+            }
+        }
+
+        /* Celestial Reveal */
+        .celestial-reveal {
+            position: absolute;
+            width: 100%;
+            height: 300px;
+            background: radial-gradient(ellipse at center,
+                rgba(255, 215, 0, 0.8) 0%,
+                rgba(218, 165, 32, 0.6) 30%,
+                rgba(147, 112, 219, 0.5) 50%,
+                transparent 75%
+            );
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            animation: celestialBurst 2.5s ease-out 6.5s forwards;
+            z-index: 10;
+            filter: blur(40px);
+            mix-blend-mode: screen;
+        }
+
+        @keyframes celestialBurst {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Premium Title */
+        .title-container {
+            position: relative;
+            z-index: 25;
+            text-align: center;
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 110px;
+            font-weight: 900;
+            letter-spacing: 18px;
+            background: linear-gradient(135deg, 
+                #daa520 0%,
+                #ffd700 25%,
+                #ffffff 50%,
+                #ffd700 75%,
+                #daa520 100%
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: titleGrandReveal 3s ease-out 6.5s forwards, 
+                       titleShimmer 6s ease-in-out 9.5s infinite;
+            position: relative;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9))
+                    drop-shadow(0 0 40px rgba(218, 165, 32, 0.8))
+                    drop-shadow(0 5px 15px rgba(218, 165, 32, 0.6));
+            margin-bottom: 30px;
+        }
+
+        @keyframes titleGrandReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.6) translateY(50px);
+                filter: blur(20px) drop-shadow(0 0 20px rgba(255, 215, 0, 0.9));
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.05) translateY(0);
+                filter: blur(0) drop-shadow(0 0 30px rgba(255, 215, 0, 1))
+                        drop-shadow(0 0 60px rgba(218, 165, 32, 0.9));
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0) drop-shadow(0 0 20px rgba(255, 215, 0, 0.9))
+                        drop-shadow(0 0 40px rgba(218, 165, 32, 0.8));
+            }
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1))
+                        drop-shadow(0 0 50px rgba(218, 165, 32, 0.9))
+                        drop-shadow(0 5px 15px rgba(218, 165, 32, 0.6));
+            }
+            50% {
+                background-position: 100% 50%;
+                filter: drop-shadow(0 0 40px rgba(255, 255, 255, 1))
+                        drop-shadow(0 0 80px rgba(255, 215, 0, 1))
+                        drop-shadow(0 5px 15px rgba(218, 165, 32, 0.8));
+            }
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 8px;
+            color: #e6d5f0;
+            opacity: 0;
+            text-shadow: 0 0 30px rgba(218, 165, 32, 0.9),
+                        0 0 50px rgba(147, 112, 219, 0.8),
+                        0 2px 10px rgba(0, 0, 0, 0.8);
+            animation: subtitleReveal 2.5s ease-out 7.5s forwards;
+            font-style: italic;
+        }
+
+        @keyframes subtitleReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 0.95;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        /* Premium Floating Particles */
+        .particle-premium {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, #ffd700 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatPremium 5s ease-in infinite;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes floatPremium {
+            0% {
+                opacity: 0;
+                transform: translateY(0) translateX(0) scale(0) rotate(0deg);
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-250px) translateX(var(--drift)) scale(2) rotate(360deg);
+            }
+        }
+
+        /* Ultra Premium Button */
+        .premium-button {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px 60px;
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #ffd700;
+            background: linear-gradient(135deg, 
+                rgba(45, 27, 78, 0.9) 0%,
+                rgba(75, 0, 130, 0.9) 50%,
+                rgba(45, 27, 78, 0.9) 100%);
+            border: 3px solid #daa520;
+            border-radius: 60px;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 30;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(218, 165, 32, 0.5),
+                        0 0 60px rgba(147, 112, 219, 0.3),
+                        inset 0 0 30px rgba(147, 112, 219, 0.3);
+            animation: buttonGrandReveal 1.5s ease-out 9s forwards;
+            position: fixed;
+            overflow: hidden;
+        }
+
+        .premium-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 215, 0, 0.3) 50%,
+                transparent 100%);
+            transition: left 0.6s;
+        }
+
+        .premium-button:hover::before {
+            left: 100%;
+        }
+
+        @keyframes buttonGrandReveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .premium-button:hover {
+            background: linear-gradient(135deg, 
+                rgba(75, 0, 130, 1) 0%,
+                rgba(138, 43, 226, 1) 50%,
+                rgba(75, 0, 130, 1) 100%);
+            box-shadow: 0 0 50px rgba(218, 165, 32, 0.8),
+                        0 0 100px rgba(147, 112, 219, 0.6),
+                        inset 0 0 50px rgba(218, 165, 32, 0.4);
+            transform: translateX(-50%) scale(1.08) translateY(-5px);
+            border-color: #ffd700;
+            color: #fff;
+        }
+
+        .premium-button:active {
+            transform: translateX(-50%) scale(1.02);
+        }
+
+        /* Premium Link Display */
+        .link-container {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, 
+                rgba(45, 27, 78, 0.95) 0%,
+                rgba(75, 0, 130, 0.95) 100%);
+            border: 3px solid #daa520;
+            border-radius: 30px;
+            padding: 35px 50px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(218, 165, 32, 0.6),
+                        0 0 100px rgba(147, 112, 219, 0.4),
+                        inset 0 0 40px rgba(147, 112, 219, 0.3);
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            min-width: 500px;
+        }
+
+        .link-container.show {
+            display: flex;
+            animation: linkReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes linkReveal {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) scale(0.8) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) scale(1) translateY(0);
+            }
+        }
+
+        .link-label {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: #c9a0dc;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(147, 112, 219, 0.6);
+            font-weight: 600;
+        }
+
+        .link-text {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: #ffd700;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 18px 35px;
+            border-radius: 15px;
+            border: 2px solid rgba(218, 165, 32, 0.5);
+            user-select: all;
+            cursor: text;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            transition: all 0.3s;
+            min-width: 400px;
+            text-align: center;
+        }
+
+        .link-text:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(218, 165, 32, 0.8);
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
+        }
+
+        .copy-btn {
+            padding: 14px 45px;
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #ffd700;
+            background: linear-gradient(135deg, 
+                rgba(75, 0, 130, 0.9) 0%,
+                rgba(138, 43, 226, 0.9) 100%);
+            border: 2px solid #daa520;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(138, 43, 226, 1) 0%,
+                rgba(147, 112, 219, 1) 100%);
+            box-shadow: 0 0 30px rgba(218, 165, 32, 0.6);
+            transform: scale(1.05);
+            border-color: #ffd700;
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, 
+                rgba(34, 139, 34, 0.9) 0%,
+                rgba(50, 205, 50, 0.9) 100%);
+            border-color: #90ee90;
+            color: #90ee90;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-title { font-size: 80px; letter-spacing: 12px; }
+            .subtitle { font-size: 24px; }
+            .outer-universe { width: 700px; height: 700px; }
+            .pentagram-grand { width: 600px; height: 600px; }
+            .hexagram-divine { width: 500px; height: 500px; }
+            .sacred-geometry { width: 400px; height: 400px; }
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 50px; letter-spacing: 8px; }
+            .subtitle { font-size: 18px; letter-spacing: 4px; }
+            .premium-button { font-size: 16px; padding: 16px 40px; }
+            .link-container { min-width: 90%; padding: 25px 30px; }
+            .link-text { min-width: 100%; font-size: 16px; }
+            .dark-star-ultimate { width: 200px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="magic-container">
+        <!-- Nebula Background -->
+        <div class="nebula-bg"></div>
+
+        <!-- 3D Stars -->
+        <div class="stars-3d" id="starsContainer"></div>
+
+        <!-- Premium Magic Circle System -->
+        <div class="magic-circle-system">
+            <!-- Outer Universe Circle -->
+            <div class="circle-layer outer-universe">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(147, 112, 219, 0.6)" stroke-width="1"/>
+                    <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="2"/>
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="1" stroke-dasharray="8,4"/>
+                    <polygon points="100,10 110,60 160,70 120,95 130,145 100,120 70,145 80,95 40,70 90,60" 
+                             fill="none" stroke="rgba(147, 112, 219, 0.6)" stroke-width="2.5"/>
+                    <polygon points="100,10 120,80 190,80 130,120 150,190 100,145 50,190 70,120 10,80 80,80" 
+                             fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="2"/>
+                </svg>
+            </div>
+
+            <!-- Pentagram Grand -->
+            <div class="circle-layer pentagram-grand">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2.5"/>
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(218, 165, 32, 0.4)" stroke-width="1.5" stroke-dasharray="10,5"/>
+                    <polygon points="100,20 118,78 178,85 132,118 148,178 100,140 52,178 68,118 22,85 82,78" 
+                             fill="none" stroke="rgba(218, 165, 32, 0.6)" stroke-width="3"/>
+                    <circle cx="100" cy="20" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                    <circle cx="178" cy="85" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                    <circle cx="148" cy="178" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                    <circle cx="52" cy="178" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                    <circle cx="22" cy="85" r="5" fill="rgba(218, 165, 32, 0.8)"/>
+                </svg>
+            </div>
+
+            <!-- Hexagram Divine -->
+            <div class="circle-layer hexagram-divine">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(138, 43, 226, 0.5)" stroke-width="2"/>
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
+                    <polygon points="100,30 125,75 175,85 135,115 145,165 100,135 55,165 65,115 25,85 75,75" 
+                             fill="none" stroke="rgba(138, 43, 226, 0.6)" stroke-width="2.5"/>
+                    <polygon points="100,170 125,125 175,115 135,85 145,35 100,65 55,35 65,85 25,115 75,125" 
+                             fill="none" stroke="rgba(138, 43, 226, 0.6)" stroke-width="2.5"/>
+                </svg>
+            </div>
+
+            <!-- Sacred Geometry -->
+            <div class="circle-layer sacred-geometry">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="75" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2.5"/>
+                    <circle cx="100" cy="100" r="65" fill="none" stroke="rgba(147, 112, 219, 0.4)" stroke-width="1.5" stroke-dasharray="12,6"/>
+                    <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2"/>
+                    <line x1="100" y1="25" x2="100" y2="175" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
+                    <line x1="25" y1="100" x2="175" y2="100" stroke="rgba(138, 43, 226, 0.4)" stroke-width="1.5"/>
+                    <line x1="38" y1="38" x2="162" y2="162" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1.5"/>
+                    <line x1="162" y1="38" x2="38" y2="162" stroke="rgba(138, 43, 226, 0.3)" stroke-width="1.5"/>
+                </svg>
+            </div>
+
+            <!-- Inner Sanctum -->
+            <div class="circle-layer inner-sanctum">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(218, 165, 32, 0.6)" stroke-width="3"/>
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(147, 112, 219, 0.5)" stroke-width="2.5"/>
+                    <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(218, 165, 32, 0.5)" stroke-width="2"/>
+                    <polygon points="100,50 115,85 150,90 125,115 130,150 100,130 70,150 75,115 50,90 85,85" 
+                             fill="none" stroke="rgba(218, 165, 32, 0.7)" stroke-width="3"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Cosmic Orbiting Stars -->
+        <div class="cosmic-orbit">
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+            <div class="orbit-star"></div>
+        </div>
+
+        <!-- Ultimate Dark Star -->
+        <div class="dark-star-ultimate">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="ultimateStarGradient">
+                        <stop offset="0%" style="stop-color:#8B00FF;stop-opacity:1"/>
+                        <stop offset="40%" style="stop-color:#4B0082;stop-opacity:1"/>
+                        <stop offset="70%" style="stop-color:#2d1654;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#1a0a33;stop-opacity:1"/>
+                    </radialGradient>
+                    <filter id="ultimateGlow">
+                        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                        <femerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </femerge>
+                    </filter>
+                </defs>
+                <g filter="url(#ultimateGlow)">
+                    <!-- 8-Point Star -->
+                    <path d="M 100 15 L 112 75 L 170 60 L 125 100 L 160 145 L 105 125 L 100 185 L 95 125 L 40 145 L 75 100 L 30 60 L 88 75 Z" 
+                          fill="url(#ultimateStarGradient)" stroke="#8B00FF" stroke-width="3"/>
+                    <circle cx="100" cy="100" r="35" fill="#2d1654" stroke="#8B00FF" stroke-width="3"/>
+                    <circle cx="100" cy="100" r="25" fill="none" stroke="#4B0082" stroke-width="2" opacity="0.8"/>
+                    <circle cx="100" cy="100" r="18" fill="none" stroke="#8B00FF" stroke-width="1.5" opacity="0.6"/>
+                    <circle cx="100" cy="100" r="12" fill="#4B0082" opacity="0.9"/>
+                    <circle cx="100" cy="100" r="6" fill="#8B00FF" opacity="1"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Divine Light Sweep -->
+        <div class="divine-light"></div>
+
+        <!-- Celestial Reveal -->
+        <div class="celestial-reveal"></div>
+
+        <!-- Title Container -->
+        <div class="title-container">
+            <h1 class="main-title">CROWN OF AETHERIA</h1>
+            <p class="subtitle">Ancient Magic Unveiled</p>
+        </div>
+
+        <!-- Premium Particles Container -->
+        <div id="particlesContainer"></div>
+
+        <!-- Premium Join Button -->
+        <button class="premium-button" id="joinBtn">เข้าสู่อาณาจักร</button>
+
+        <!-- Premium Link Container -->
+        <div class="link-container" id="linkContainer">
+            <div class="link-label">ประตูสู่อาณาจักร Discord</div>
+            <div class="link-text" id="discordLink">https://discord.gg/TSVtmWSrX</div>
+            <button class="copy-btn" id="copyBtn">คัดลอกลิงก์</button>
+        </div>
+    </div>
+
+    <script>
+        // Create 3D Stars
+        function create3DStars() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'twinkle-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (2 + Math.random() * 3) + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // Create Premium Particles
+        function createPremiumParticles() {
+            const container = document.getElementById('particlesContainer');
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle-premium';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = (80 + Math.random() * 20) + '%';
+                particle.style.animationDelay = '0s';
+                particle.style.animationDuration = (4 + Math.random() * 2) + 's';
+                particle.style.setProperty('--drift', (Math.random() - 0.5) * 150 + 'px');
+                container.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 5000);
+            }, 200);
+        }
+
+        // Button Functionality
+        const joinBtn = document.getElementById('joinBtn');
+        const linkContainer = document.getElementById('linkContainer');
+        const copyBtn = document.getElementById('copyBtn');
+        const discordLink = document.getElementById('discordLink');
+
+        joinBtn.addEventListener('click', () => {
+            joinBtn.style.display = 'none';
+            linkContainer.classList.add('show');
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const linkText = discordLink.textContent;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(linkText).then(() => {
+                    copyBtn.textContent = 'คัดลอกแล้ว!';
+                    copyBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        copyBtn.textContent = 'คัดลอกลิงก์';
+                        copyBtn.classList.remove('copied');
+                    }, 2500);
+                }).catch(() => {
+                    fallbackCopy(linkText);
+                });
+            } else {
+                fallbackCopy(linkText);
+            }
+        });
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                copyBtn.textContent = 'คัดลอกแล้ว!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyBtn.textContent = 'คัดลอกลิงก์';
+                    copyBtn.classList.remove('copied');
+                }, 2500);
+            } catch (err) {
+                copyBtn.textContent = 'กรุณาเลือกและคัดลอก';
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Initialize
+        create3DStars();
+        createPremiumParticles();
+    </script>
+</body>
 </html>
